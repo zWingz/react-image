@@ -1,0 +1,63 @@
+{
+  "name": "react-image",
+  "version": "1.0.0",
+  "description": "react image component",
+  "main": "dist/react-image.min.js",
+  "scripts": {
+    "docz": "cross-env NODE_ENV=development docz dev",
+    "docz:build": "docz build",
+    "lint": "eslint --ext .js,.jsx --ignore-pattern [vendor] src",
+    "build": "cross-env NODE_ENV=production webpack --config=./build/prod.conf.js"
+  },
+  "author": "zhengzwing",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zWingz/react-image.git"
+  },
+  "peerDependencies": {
+    "react": ">=16.0.0",
+    "react-dom": ">=16.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "7.0.0-beta.54",
+    "@babel/plugin-proposal-class-properties": "7.0.0-beta.54",
+    "@babel/preset-env": "7.0.0-beta.54",
+    "@babel/preset-react": "7.0.0-beta.54",
+    "@babel/preset-stage-0": "^7.0.0-beta.54",
+    "@mdx-js/loader": "^0.15.0-2",
+    "@mdx-js/mdx": "^0.15.0-2",
+    "autoprefixer": "^9.1.0",
+    "babel-eslint": "^8.2.6",
+    "babel-loader": "^8.0.0-beta.0",
+    "cross-env": "^5.2.0",
+    "css-loader": "^1.0.0",
+    "docz": "^0.9.6",
+    "docz-plugin-css": "^0.9.6",
+    "docz-theme-default": "^0.9.6",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^17.0.0",
+    "eslint-loader": "^2.1.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.10.0",
+    "file-loader": "^1.1.11",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.4.1",
+    "node-sass": "^4.9.2",
+    "optimize-css-assets-webpack-plugin": "^5.0.0",
+    "postcss-loader": "^2.1.6",
+    "prop-types": "^15.6.2",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "react-hot-loader": "^4.3.4",
+    "sass-loader": "^7.0.3",
+    "uglifyjs-webpack-plugin": "^1.2.7",
+    "url-loader": "^1.0.1",
+    "vue-style-loader": "^4.1.1",
+    "webpack": "^4.16.3",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.5",
+    "webpack-merge": "^4.1.3"
+  }
+}

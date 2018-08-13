@@ -1,0 +1,94 @@
+---
+name: Usage
+route: /
+order: 1
+---
+
+import { Playground, PropsTable } from 'docz'
+import {Image, PreviewApi } from '../src'
+const Images = (function() {
+  const ret = []
+  for(let i = 1; i <= 20; i++) {
+    ret.push(
+      require(`./assets/${i}.jpg`)
+    )
+  }
+  return ret
+})()
+
+# Usage
+
+## Image
+
+#### An Image Component
+
+- Auto show the `loading` or `error` status of `img`
+- Can be previewed by Component `Preview`
+- Group by props `group`
+- Loadable by used `IntersectionObserver`
+
+### Base
+
+<Playground>
+  <Image src={require('./assets/logo.jpg')} width={120} height={120}/>
+</Playground>
+
+### Multi Image
+
+<Playground>
+  <div style={{display: 'flex', flexWrap: 'wrap'}}>
+    {
+      Images.map(each => {
+        return <Image group='multi' key={each} src={each} width={120} height={120} style={{margin: '5px'}}/>
+      })
+    }
+  </div>
+</Playground>
+
+
+### Callback
+
+<Playground>
+  {
+    (function() {
+      const props = {
+        group: 'callback',
+        width: 120,
+        height: 120,
+        onLoad: (src) => {
+          console.log('onLoad -> ', src)
+        },
+        onError: (src) => {
+          console.log('onError -> ', src)
+        },
+        onClick: (src) => {
+          console.log('onClick -> ', src)
+        },
+        onDelete: (src) => {
+          console.log('onDelete -> ', src)
+        }
+      }
+      return [
+        <Image key={1} src={require('./assets/1.jpg')} {...props}/>,
+        <Image key={2} src={require('./assets/2.jpg')} {...props}/>,
+        <Image key={4} src='123.jpg' {...props}/>
+      ]
+    })()
+  }
+
+</Playground>
+
+
+## Preview
+
+Preview image without use component `Image`
+<Playground>
+  {
+    (function() {
+      const img = [require('./assets/1.jpg'), require('./assets/2.jpg'), require('./assets/3.jpg')]
+      return img.map(each => {
+        return <img src={each} key={each} style={{width: '200px', height: '200px', objectFit: 'cover'}}onClick={() => PreviewApi.preview(each, img)}/>
+      })
+    })()
+  }
+</Playground>

@@ -1,0 +1,40 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: node:latest
+
+    working_directory: ~/react-image
+
+    branches:
+      only:
+        - master # 这个是配置文件的分支名，注意不要写错分支
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+      - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run: git checkout .
+      - run: git checkout gh-pages #
+      - run: git reset --hard origin/master # 同上
+      - run: npm run docz:build
+      - run: mv website/* ./
+      - run: git add .
+      - run: git add -u
+      - run: git config user.name "zWingz" # 你的 GitHub 用户名，一定要改，不要填我的
+      - run: git config user.email "371657110@qq.com" # 你的 GitHub 邮箱，一定要改，不要填我的
+      - run: git commit -m "Updated by circleci - `date`" # 你可以修改 commit 的文字，后面的 date 代表时间
+      - run: git push --force https://${gh_token}@github.com:zWingz/react-image.git gh-pages:gh-pages # 修改成你的项目路径，格式为 用户名/项目名。gh-pages 为存放博客静态文件分支，不要写错了。${gh_token} 不明白也不要动

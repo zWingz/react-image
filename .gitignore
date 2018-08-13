@@ -1,0 +1,55 @@
+# 按照实际情况，将项目中不需要上传到git仓库的文件或者文件夹忽略
+
+
+# IDE自动生成的文件
+.idea
+.vscode
+.project
+.settings
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 包管理文件
+bower_components/
+node_modules/
+
+# 打包构建的文件
+dist
+release/
+release-*/
+test-build/
+
+#grunt
+.grunt
+
+# 缓存文件
+.sass-cache/
+.eslintcache
+
+# 有关sass 配置
+config.rb
+
+# 日志文件，各种*.log
+npm-debug.log
+*.log
+
+# 压缩文件
+*.zip
+*.tgz
+
+#其他不必需的文件
+*~
+*.bak
+*.diff
+*.psd
+*.min.*
+.DS_Store
+.swp
+
+website
+.docz

@@ -1,0 +1,4 @@
+build/*.js
+dist/**/*.js
+src/vendor
+test-build/**/*.js

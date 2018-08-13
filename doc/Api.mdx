@@ -1,0 +1,24 @@
+---
+name: API
+route: /api
+---
+
+import { Playground, PropsTable } from 'docz'
+import {Image, Preview} from '../src'
+
+# API
+
+## Image
+
+<PropsTable of={Image}/>
+
+## Preview
+
+<PropsTable of={Preview}/>
+
+|    func    | desc |  params  |
+| ---------- | --- | ------ |
+| preview|  preview a image  | image:\[String\|Number\]: imageSrc or image index of list \n list:Array: Images List |
+| show |  open the previewer |  |
+| hide |  close the previewer |  |
+| destroy |  destroy the ins |  |
