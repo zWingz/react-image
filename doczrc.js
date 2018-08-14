@@ -1,5 +1,6 @@
 import { css } from 'docz-plugin-css'
 export default {
+  base: '/react-image/',
   title: 'Image Component',
   description: 'A React Component',
   dest: 'website',
