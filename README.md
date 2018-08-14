@@ -1,4 +1,7 @@
 # A React Image Component
+[![CircleCI](https://circleci.com/gh/zWingz/react-image/tree/master.svg?style=svg)](https://circleci.com/gh/zWingz/react-image/tree/master)
+
+[DEMO](http://zwing.site/react-image/#/)
 
 ## Image
 
