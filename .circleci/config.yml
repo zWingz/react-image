@@ -37,5 +37,5 @@ jobs:
       - run: git config user.name "zWingz"
       - run: git config user.email "371657110@qq.com"
       - run: git commit -m "Updated by circleci - `date`"
-      - run: git push --force gh-pages:gh-pages
+      - run: git push --force origin gh-pages
       # - run: git push --force https://${gh_token}@github.com:zWingz/react-image.git gh-pages:gh-pages
