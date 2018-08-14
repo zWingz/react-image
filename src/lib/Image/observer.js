@@ -29,8 +29,8 @@ export function unobserve(element) {
 
 function excute(entries) {
   entries.forEach(each => {
-    const { target, isIntersecting } = each
-    if(isIntersecting) {
+    const { target, intersectionRatio } = each
+    if(intersectionRatio > 0) {
       const cb = targets.get(target)
       cb(each)
       unobserve(target)

@@ -1,9 +1,9 @@
-var path = require('path')
+const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-const base = require('./base.conf')
 const merge = require('webpack-merge')
+const base = require('./base.conf')
 
 module.exports = merge(base, {
   mode: 'production',
@@ -11,9 +11,9 @@ module.exports = merge(base, {
     main: './src/index'
   },
   output: {
-    path: path.resolve(__dirname, '../dist'),
-    publicPath: '/dist/',
-    filename: 'ract-image.min.js',
+    path: path.resolve(__dirname, '../lib'),
+    // publicPath: '/lib/',
+    filename: 'react-image.min.js',
     library: 'react-image',
     libraryTarget: 'umd',
     umdNamedDefine: true

@@ -34,7 +34,8 @@ jobs:
       - run: mv website/* ./
       - run: git add .
       - run: git add -u
-      - run: git config user.name "zWingz" # 你的 GitHub 用户名，一定要改，不要填我的
-      - run: git config user.email "371657110@qq.com" # 你的 GitHub 邮箱，一定要改，不要填我的
-      - run: git commit -m "Updated by circleci - `date`" # 你可以修改 commit 的文字，后面的 date 代表时间
-      - run: git push --force https://${gh_token}@github.com:zWingz/react-image.git gh-pages:gh-pages # 修改成你的项目路径，格式为 用户名/项目名。gh-pages 为存放博客静态文件分支，不要写错了。${gh_token} 不明白也不要动
+      - run: git config user.name "zWingz"
+      - run: git config user.email "371657110@qq.com"
+      - run: git commit -m "Updated by circleci - `date`"
+      - run: git push --force gh-pages:gh-pages
+      # - run: git push --force https://${gh_token}@github.com:zWingz/react-image.git gh-pages:gh-pages

@@ -4,7 +4,8 @@ import './style.scss'
 import LoadingIcon from '../LoadingIcon'
 import { CanUseIntersecion, observe, unobserve } from './observer'
 import { PreviewApi } from '../ImgPreview'
-
+import picNull from '../../assets/pic_null.png'
+import picError from '../../assets/pic_loading_fail.png'
 export default class ReactImage extends React.PureComponent {
   static propTypes = {
     /** Component Style */
@@ -56,9 +57,9 @@ export default class ReactImage extends React.PureComponent {
   get url() {
     const { src } = this.props
     return src === ''
-      ? require('../../assets/pic_null.png')
+      ? picNull
       : this.state.isError
-        ? require('../../assets/pic_loading_fail.png')
+        ? picError
         : src
   }
 
