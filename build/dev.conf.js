@@ -5,7 +5,7 @@ const webpack = require('webpack')
 module.exports = merge(base, {
   mode: 'development',
   entry: {
-    index: './example/index.js'
+    index: './develop/index.js'
   },
   module: {
     rules: [
@@ -21,16 +21,12 @@ module.exports = merge(base, {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './index.html',
+      template: './develop/index.html',
       filename: 'index.html',
       inject: true,
       chunks: ['index']
     }),
-    new webpack.HotModuleReplacementPlugin(),
+    // new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin()
-  ],
-  devServer: {
-    hot: true,
-    overlay: { warnings: false, errors: true } // 是否将errors显示在页面
-  }
+  ]
 })
