@@ -78,18 +78,13 @@
   overflow: auto;
   background: rgba(0, 0, 0, 0.7);
   overflow: hidden;
-  img {
-    // border: 2px solid transparent;
-    object-fit: cover;
-    width: 50px;
+  .img-viewer-list-item {
     opacity: .5;
-    height: 50px;
-    box-sizing: border-box;
-    border: 1px solid transparent;
-    // margin: 0 5px;
+    &:hover {
+      opacity: 1;
+    }
     &.active {
       opacity: 1;
-      border-color: #fff;
     }
   }
 }

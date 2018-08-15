@@ -6,14 +6,11 @@
   position: relative;
   flex-shrink: 0;
   &:hover {
-    &:after {
-      background: rgba(0, 0, 0, 0.1);
-    }
     .delete-img {
       opacity: 1;
     }
   }
-  &:after {
+  &.mask::after {
     content: '';
     pointer-events: none;
     position: absolute;
@@ -23,6 +20,9 @@
     bottom: -2px;
     transition: background 0.1s ease;
     background: transparent;
+    &:hover::after {
+      background: rgba(0, 0, 0, 0.1);
+    }
   }
   img {
     width: 100%;

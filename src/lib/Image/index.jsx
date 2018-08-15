@@ -4,8 +4,7 @@ import './style.scss'
 import LoadingIcon from '../LoadingIcon'
 import { CanUseIntersecion, observe, unobserve } from './observer'
 import { PreviewApi } from '../ImgPreview'
-import picNull from '../../assets/pic_null.png'
-import picError from '../../assets/pic_loading_fail.png'
+import ErrorIcon from '../ErrorIcon'
 export default class ReactImage extends React.PureComponent {
   static propTypes = {
     /** Component Style */
@@ -26,6 +25,8 @@ export default class ReactImage extends React.PureComponent {
     imgProps: PropTypes.object,
     /** Can it be previewed  */
     preview: PropTypes.bool,
+    /** show mask when hover */
+    mask: PropTypes.bool,
     /** onDelete callback, param: src, it will display an icon on right corner when hover */
     onDelete: PropTypes.func,
     /** Image onError callback, param: src */
@@ -40,7 +41,8 @@ export default class ReactImage extends React.PureComponent {
     width: 100,
     group: 'default',
     objectFit: 'cover',
-    preview: true
+    preview: true,
+    mask: true
   }
 
   constructor() {
@@ -54,15 +56,6 @@ export default class ReactImage extends React.PureComponent {
     loadObserve: !CanUseIntersecion // InterseciontObserver, 监听图片是否出现在viewport
   }
 
-  get url() {
-    const { src } = this.props
-    return src === ''
-      ? picNull
-      : this.state.isError
-        ? picError
-        : src
-  }
-
   get style() {
     const { height, width } = this.props
     return {
@@ -73,15 +66,16 @@ export default class ReactImage extends React.PureComponent {
   }
 
   get imgStyle() {
+    const { isLoading, isError } = this.state
     const ret = {
       objectFit: this.props.objectFit
     }
     const { imgProps } = this.props
-    if(imgProps && imgProps.style) {
+    if (imgProps && imgProps.style) {
       Object.assign(ret, imgProps.style)
     }
     Object.assign(ret, {
-      display: this.state.isLoading ? 'none' : ''
+      display: (isLoading || isError) ? 'none' : ''
     })
     return ret
   }
@@ -98,18 +92,19 @@ export default class ReactImage extends React.PureComponent {
   onLoad = () => {
     const { onLoad, src } = this.props
     this.setState({
-      isLoading: false
+      isLoading: false,
+      isError: false
     })
     onLoad && onLoad(src)
   }
 
   onClickHandler = () => {
     const { isLoading, isError } = this.state
-    const {
-      src, group, preview, onClick
-    } = this.props
-    if(preview && src && !isLoading && !isError) {
-      const dom = document.querySelectorAll(`.mask-img[data-img-group="${group}"]`)
+    const { src, group, preview, onClick } = this.props
+    if (preview && src && !isLoading && !isError) {
+      const dom = document.querySelectorAll(
+        `.mask-img[data-img-group="${group}"]`
+      )
       const list = Array.from(dom).map(each => each.dataset.imgSrc)
       PreviewApi.preview(src, list)
     }
@@ -131,24 +126,24 @@ export default class ReactImage extends React.PureComponent {
 
   render() {
     // const { width, height } = this.props
-    const {
-      group, imgProps, onDelete, src
-    } = this.props
-    const { isLoading, loadObserve } = this.state
+    const { group, imgProps, onDelete, src, height, preview, className, mask } = this.props
+    const { isLoading, loadObserve, isError } = this.state
 
     return (
       <span
-        className={['mask-img', this.props.className].join(
-          ' '
-        )}
-        data-img-group={group}
-        data-img-src={this.url}
+        className={['mask-img', mask ? 'mask' : '', className].join(' ')}
+        data-img-group={preview ? group : null}
+        data-img-src={preview ? src : null}
         style={this.style}
         ref={this.refDom}
       >
-        {this.props.onDelete ? (
+        {onDelete ? (
           <span className="delete-img">
-            <i className="react-image-icon" style={{display: 'inline-block'}} onClick={() => onDelete(src)}>
+            <i
+              className="react-image-icon"
+              style={{ display: 'inline-block' }}
+              onClick={() => onDelete(src)}
+            >
               &#xe904;
             </i>
           </span>
@@ -156,7 +151,7 @@ export default class ReactImage extends React.PureComponent {
         {loadObserve && (
           <img
             {...imgProps}
-            src={this.url}
+            src={src}
             onError={this.onError}
             onLoad={this.onLoad}
             onClick={this.onClickHandler}
@@ -164,11 +159,11 @@ export default class ReactImage extends React.PureComponent {
           />
         )}
         {isLoading && (
-          <div className="mask-loading">
+          <div className="mask-loading" style={{minHeight: `${height || 100}px`}}>
             <LoadingIcon size="sm" />
-            <span className="mask-loading-text">Loading</span>
           </div>
         )}
+        {isError && <ErrorIcon style={{ width: '100%', height: '100%' }} />}
       </span>
     )
   }
