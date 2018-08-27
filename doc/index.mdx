@@ -18,7 +18,15 @@ const Images = (function() {
 
 # Usage
 
-## Image
+## Install
+
+`$ npm install @zzwing/react-iamge`
+
+`import { Image, PreviewApi } from '@zzwing/react-image'`
+
+## Component
+
+### Image
 
 #### An Image Component
 
@@ -27,13 +35,13 @@ const Images = (function() {
 - Group by props `group`
 - Loadable by used `IntersectionObserver`
 
-### Base
+#### Base
 
 <Playground>
   <Image src={require('./assets/logo.jpg')} width={120} height={120}/>
 </Playground>
 
-### Multi Image
+#### Multi Image
 
 <Playground>
   <div style={{display: 'flex', flexWrap: 'wrap'}}>
@@ -46,7 +54,7 @@ const Images = (function() {
 </Playground>
 
 
-### Callback
+#### Callback
 
 <Playground>
   {
@@ -79,7 +87,7 @@ const Images = (function() {
 </Playground>
 
 
-## Preview
+### Preview
 
 Preview image without use component `Image`
 <Playground>

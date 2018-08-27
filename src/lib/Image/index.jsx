@@ -71,11 +71,11 @@ export default class ReactImage extends React.PureComponent {
       objectFit: this.props.objectFit
     }
     const { imgProps } = this.props
-    if (imgProps && imgProps.style) {
+    if(imgProps && imgProps.style) {
       Object.assign(ret, imgProps.style)
     }
     Object.assign(ret, {
-      display: (isLoading || isError) ? 'none' : ''
+      display: isLoading || isError ? 'none' : ''
     })
     return ret
   }
@@ -100,8 +100,10 @@ export default class ReactImage extends React.PureComponent {
 
   onClickHandler = () => {
     const { isLoading, isError } = this.state
-    const { src, group, preview, onClick } = this.props
-    if (preview && src && !isLoading && !isError) {
+    const {
+      src, group, preview, onClick
+    } = this.props
+    if(preview && src && !isLoading && !isError) {
       const dom = document.querySelectorAll(
         `.mask-img[data-img-group="${group}"]`
       )
@@ -126,7 +128,16 @@ export default class ReactImage extends React.PureComponent {
 
   render() {
     // const { width, height } = this.props
-    const { group, imgProps, onDelete, src, height, preview, className, mask } = this.props
+    const {
+      group,
+      imgProps,
+      onDelete,
+      src,
+      height,
+      preview,
+      className,
+      mask
+    } = this.props
     const { isLoading, loadObserve, isError } = this.state
 
     return (
@@ -159,7 +170,10 @@ export default class ReactImage extends React.PureComponent {
           />
         )}
         {isLoading && (
-          <div className="mask-loading" style={{minHeight: `${height || 100}px`}}>
+          <div
+            className="mask-loading"
+            style={{ minHeight: `${height || 100}px` }}
+          >
             <LoadingIcon size="sm" />
           </div>
         )}

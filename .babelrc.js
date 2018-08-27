@@ -9,7 +9,11 @@ module.exports = {
     ],
     "@babel/preset-react"
   ],
-  "plugins": [['@babel/proposal-class-properties', { loose: true }]],
+  "plugins": [
+    ['@babel/proposal-class-properties', { loose: true }],
+    '@babel/plugin-external-helpers',
+    // "external-helpers"
+  ],
   "env": {
     "development": {
       "plugins": [
