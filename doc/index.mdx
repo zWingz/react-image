@@ -5,7 +5,8 @@ order: 1
 ---
 
 import { Playground, PropsTable } from 'docz'
-import {Image, PreviewApi } from '../src'
+import { Image, PreviewApi } from '../src'
+import src1 from './assets/logo.jpg'
 const Images = (function() {
   const ret = []
   for(let i = 1; i <= 20; i++) {
@@ -13,8 +14,10 @@ const Images = (function() {
       require(`./assets/${i}.jpg`)
     )
   }
+  window.Images = ret
   return ret
 })()
+
 
 # Usage
 
@@ -38,7 +41,7 @@ const Images = (function() {
 #### Base
 
 <Playground>
-  <Image src={require('./assets/logo.jpg')} width={120} height={120}/>
+  <Image src={src1} width={120} height={120}/>
 </Playground>
 
 #### Multi Image
@@ -77,8 +80,8 @@ const Images = (function() {
         }
       }
       return [
-        <Image key={1} src={require('./assets/1.jpg')} {...props}/>,
-        <Image key={2} src={require('./assets/2.jpg')} {...props}/>,
+        <Image key={1} src={Images[0]} {...props}/>,
+        <Image key={2} src={Images[1]} {...props}/>,
         <Image key={4} src='123.jpg' {...props}/>
       ]
     })()
@@ -93,7 +96,7 @@ Preview image without use component `Image`
 <Playground>
   {
     (function() {
-      const img = [require('./assets/1.jpg'), require('./assets/2.jpg'), require('./assets/3.jpg')]
+      const img = Images.slice(0, 3)
       return img.map(each => {
         return <img src={each} key={each} style={{width: '200px', height: '200px', objectFit: 'cover'}}onClick={() => PreviewApi.preview(each, img)}/>
       })
