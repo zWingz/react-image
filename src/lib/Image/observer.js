@@ -8,32 +8,46 @@ export const CanUseIntersecion = 'IntersectionObserver' in window
 // const targets = []
 const targets = new Map()
 /* eslint-disable */
-const ins = CanUseIntersecion ? new IntersectionObserver(excute) : null
+export function createObserver(container) {
+  if(!CanUseIntersecion) {
+    return null
+  }
+  const opt = {}
+  if(container) {
+    opt.root = container
+  }
+  return new IntersectionObserver(excute, opt)
+}
+// const ins = CanUseIntersecion ? new IntersectionObserver(excute) : null
+const ins = createObserver()
 /* eslint-enable */
 
-export function observe(element, cb) {
+export function observe(element, cb, observer = ins) {
   if(!CanUseIntersecion) {
     return
   }
-  ins.observe(element)
-  targets.set(element, cb)
+  observer.observe(element)
+  targets.set(element, {
+    cb,
+    observer
+  })
 }
 
-export function unobserve(element) {
+export function unobserve(element, observer = ins) {
   if(!CanUseIntersecion) {
     return
   }
   targets.delete(element)
-  ins.unobserve(element)
+  observer.unobserve(element)
 }
 
 function excute(entries) {
   entries.forEach(each => {
     const { target, intersectionRatio } = each
     if(intersectionRatio > 0) {
-      const cb = targets.get(target)
-      cb(each)
-      unobserve(target)
+      const tar = targets.get(target)
+      tar.cb(each)
+      unobserve(target, tar.observer)
     }
   })
 }

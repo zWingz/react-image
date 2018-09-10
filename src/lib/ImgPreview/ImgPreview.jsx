@@ -4,11 +4,12 @@ import ReactDOM from 'react-dom'
 import LoadingIcon from '../LoadingIcon'
 import ErrorIcon from '../ErrorIcon'
 import Image from '../Image'
+import {createObserver} from '../Image/observer'
 // import Store from './imgViewStore'
 function find(list, arg) {
   return list.findIndex(each => each === arg)
 }
-
+let observer = null
 export default class ImgPpreview extends React.PureComponent {
   state = {
     // mouse position
@@ -44,15 +45,15 @@ export default class ImgPpreview extends React.PureComponent {
   exportPreview = (current, list) => {
     let l = this.state.images
     let c = current
-    if (list) {
+    if(list) {
       l = list
     }
     // 如果为number型则直接设置
-    if (typeof c !== 'number') {
+    if(typeof c !== 'number') {
       // 否则调用find方法找下标
       // 如果不存在则设为images
       const idx = find(l, c)
-      if (idx === -1) {
+      if(idx === -1) {
         l = [c]
         c = 0
       } else {
@@ -76,11 +77,11 @@ export default class ImgPpreview extends React.PureComponent {
     e.stopPropagation()
     e.preventDefault()
     const { keyCode } = e
-    if (keyCode === 27) {
+    if(keyCode === 27) {
       this.hide()
-    } else if (keyCode === 37) {
+    } else if(keyCode === 37) {
       this.prev()
-    } else if (keyCode === 39) {
+    } else if(keyCode === 39) {
       this.next()
     }
   }
@@ -93,10 +94,10 @@ export default class ImgPpreview extends React.PureComponent {
    */
   hideHandle = e => {
     const { target } = e
-    if (
-      target === this.$close ||
-      target === this.$el ||
-      target === this.$footer
+    if(
+      target === this.$close
+      || target === this.$el
+      || target === this.$footer
     ) {
       this.hide()
     }
@@ -194,7 +195,7 @@ export default class ImgPpreview extends React.PureComponent {
    */
   mouseDownHandle = e => {
     e.stopPropagation()
-    if (e.button !== 0) {
+    if(e.button !== 0) {
       return
     }
     const container = this.$el
@@ -243,7 +244,7 @@ export default class ImgPpreview extends React.PureComponent {
     // 放大缩小功能
     // const delta = e.wheelDelta ? e.wheelDelta : -(e.detail || 0)
     let { scale } = this.state
-    if (-e.deltaY < 0) {
+    if(-e.deltaY < 0) {
       // 放大
       scale *= 1.2
     } else {
@@ -266,7 +267,7 @@ export default class ImgPpreview extends React.PureComponent {
     const width = img.naturalWidth
     let scale = 1
     const windwoWidth = (window.innerWidth * 3) / 4
-    if (width > windwoWidth) {
+    if(width > windwoWidth) {
       scale = windwoWidth / width
     }
     this.setState(
@@ -284,8 +285,8 @@ export default class ImgPpreview extends React.PureComponent {
     )
   }
 
-  imgOnError = e => {
-    console.log('onError');
+  imgOnError = () => {
+    console.log('onError')
     this.setState({
       loaded: true,
       error: true
@@ -334,6 +335,12 @@ export default class ImgPpreview extends React.PureComponent {
     }
   }
 
+  componentDidMount() {
+    if(!observer) {
+      observer = createObserver(document.querySelector('.img-viewer-list'))
+    }
+  }
+
   render() {
     const {
       state,
@@ -348,6 +355,7 @@ export default class ImgPpreview extends React.PureComponent {
       next,
       rotateFnc
     } = this
+    const { current, images } = state
     return (
       <div
         id="imgPreview"
@@ -422,16 +430,17 @@ export default class ImgPpreview extends React.PureComponent {
           <div className="img-viewer-list">
             <div className="img-viewer-list-inner">
               <div style={this.imgListStyle}>
-                {state.images.map((src, idx) => (
+                {images.map((src, idx) => (
                   <div
                     onClick={() => this.change(idx)}
                     key={idx}
                     className={[
                       'img-viewer-list-item',
-                      state.current === idx ? 'active' : ''
+                      current === idx ? 'active' : ''
                     ].join(' ')}
                   >
                     <Image
+                      observer={observer}
                       width="50"
                       height="50"
                       preview={false}
@@ -449,11 +458,11 @@ export default class ImgPpreview extends React.PureComponent {
   }
 }
 
-ImgPpreview.newInstance = function newNotificationInstance(callback) {
+ImgPpreview.newInstance = function newPreviewInstance(callback) {
   const div = document.createElement('div')
   let called = false
   function ref(ins) {
-    if (called) {
+    if(called) {
       return
     }
     called = true

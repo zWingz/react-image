@@ -119,11 +119,11 @@ export default class ReactImage extends React.PureComponent {
       this.setState({
         loadObserve: true
       })
-    })
+    }, this.props.observer)
   }
 
   componentWillUnmount() {
-    unobserve(this.refDom.current)
+    unobserve(this.refDom.current, this.props.observer)
   }
 
   render() {
