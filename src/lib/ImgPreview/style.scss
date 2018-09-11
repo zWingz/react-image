@@ -37,12 +37,12 @@
 }
 .img-viewer-current {
   position: relative;
-  transition: transform .45s;
-  animation: preview-ani 0.5s linear;
+  transition: transform .3s ease-in-out;
+  animation: preview-ani 0.3s ease-in-out;
 }
 @keyframes preview-ani {
   from {
-    opacity: 0;
+    opacity: 0.3;
   }
   to {
     opacity: 1;
