@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 import LoadingIcon from '../LoadingIcon'
 import ErrorIcon from '../ErrorIcon'
 import Image from '../Image'
-import {createObserver} from '../Image/observer'
+import { createObserver } from '../Image/observer'
 // import Store from './imgViewStore'
 function find(list, arg) {
   return list.findIndex(each => each === arg)
@@ -286,7 +286,6 @@ export default class ImgPpreview extends React.PureComponent {
   }
 
   imgOnError = () => {
-    console.log('onError')
     this.setState({
       loaded: true,
       error: true
@@ -310,8 +309,6 @@ export default class ImgPpreview extends React.PureComponent {
     return {
       left: left + 'px',
       top: top + 'px',
-      // width: ((rotate / 90) % 2 === 0 ? width : height) * scaleFixed + 'px',
-      // height: ((rotate / 90) % 2 === 0 ? height : width) * scaleFixed + 'px',
       transform: `rotate(${rotate}deg) scale(${scaleFixed})`
     }
   }
@@ -341,64 +338,75 @@ export default class ImgPpreview extends React.PureComponent {
     }
   }
 
-  render() {
-    const {
-      state,
-      currentImg,
-      mouseUpHandle,
-      mouseWheelHandle,
-      mouseDownHandle,
-      imgOnLoad,
-      imgOnError,
-      imgSty,
-      prev,
-      next,
-      rotateFnc
-    } = this
-    const { current, images } = state
+  _renderIcon() {
     return (
-      <div
-        id="imgPreview"
-        ref={el => {
-          this.$el = el
-        }}
-        className="img-viewer-container"
-        style={{ display: state.open ? 'flex' : 'none' }}
-        onMouseUp={mouseUpHandle}
-        onWheel={mouseWheelHandle}
-        draggable="false"
-      >
-        <div
-          className="img-viewer-close"
-          ref={el => {
-            this.$close = el
-          }}
-        >
-          <i className="react-image-icon" style={{ pointerEvents: 'none' }}>
+      <>
+        <div className="img-viewer-close">
+          <i
+            ref={el => {
+              this.$close = el
+            }}
+            className="react-image-icon"
+            style={{ pointerEvents: 'none' }}
+          >
             &#xe904;
           </i>
         </div>
-        {state.changed && (
-          <React.Fragment>
-            <img
-              className={[
-                'img-viewer-current',
-                state.loaded && !state.error ? '' : 'dis-none'
-              ].join(' ')}
-              onMouseDown={mouseDownHandle}
-              onLoad={imgOnLoad}
-              onError={imgOnError}
-              src={currentImg}
-              alt=""
-              draggable="false"
-              style={imgSty}
-            />
-            {!state.loaded && <LoadingIcon />}
-            {state.error && (
-              <ErrorIcon style={{ width: '300px', height: '300px' }} />
-            )}
-          </React.Fragment>
+        <i className="img-viewer-prev react-image-icon" onClick={this.prev}>
+          &#xe914;
+        </i>
+        <i className="img-viewer-next react-image-icon" onClick={this.next}>
+          &#xe914;
+        </i>
+      </>
+    )
+  }
+
+  _renderImg() {
+    const {
+      state,
+      currentImg,
+      mouseDownHandle,
+      imgOnLoad,
+      imgOnError,
+      imgSty
+    } = this
+    return (
+      <>
+        <img
+          className={[
+            'img-viewer-current',
+            state.loaded && !state.error ? '' : 'dis-none'
+          ].join(' ')}
+          onMouseDown={mouseDownHandle}
+          onLoad={imgOnLoad}
+          onError={imgOnError}
+          src={state.changed ? currentImg : ''}
+          alt=""
+          draggable={false}
+          style={imgSty}
+        />
+        {!state.loaded && (
+          <div className="img-viewer-status">
+            <LoadingIcon />
+          </div>
         )}
+        {state.error && (
+          <div className="img-viewer-status">
+            <ErrorIcon style={{ width: '300px', height: '300px' }} />
+          </div>
+        )}
+      </>
+    )
+  }
+
+  _renderFooter() {
+    const {
+      state, prev, next, rotateFnc
+    } = this
+    const { images, current } = state
+    return (
+      <>
         <div
           className="img-viewer-footer"
           ref={ref => {
@@ -407,23 +415,23 @@ export default class ImgPpreview extends React.PureComponent {
         >
           <div className="img-viewer-ctrl">
             <i
-              className="icon react-image-icon"
+              className="react-image-icon"
               onClick={prev}
               style={{ transform: 'rotateY(180deg)' }}
             >
               &#xe914;
             </i>
-            <i className="icon react-image-icon" onClick={() => rotateFnc(90)}>
+            <i className="react-image-icon" onClick={() => rotateFnc(90)}>
               &#xe91a;
             </i>
             <i
-              className="icon react-image-icon"
+              className="react-image-icon"
               onClick={() => rotateFnc(-90)}
               style={{ transform: 'rotateY(180deg)' }}
             >
               &#xe91a;
             </i>
-            <i className="icon react-image-icon" onClick={next}>
+            <i className="react-image-icon" onClick={next}>
               &#xe914;
             </i>
           </div>
@@ -453,6 +461,29 @@ export default class ImgPpreview extends React.PureComponent {
             </div>
           </div>
         </div>
+      </>
+    )
+  }
+
+  render() {
+    const { state, mouseUpHandle, mouseWheelHandle } = this
+    return (
+      <div
+        id="imgPreview"
+        ref={el => {
+          this.$el = el
+        }}
+        className="img-viewer-container"
+        style={{ display: state.open ? 'flex' : 'none' }}
+        onMouseUp={mouseUpHandle}
+        onWheel={mouseWheelHandle}
+        draggable="false"
+      >
+        {this._renderIcon()}
+
+        {this._renderImg()}
+
+        {this._renderFooter()}
       </div>
     )
   }

@@ -9,22 +9,52 @@
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.5);
-  transition: left 0.3s ease;
   height: 100%;
   overflow: hidden;
   user-select: none;
   z-index: 999;
+  .react-image-icon {
+    color: #e3e3e9;
+    cursor: pointer;
+    &:hover {
+      color: #6a82ec;
+    }
+  }
+  > .react-image-icon {
+    font-size: 56px;
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    transform: translateY(-50%);
+    &.img-viewer-prev {
+      left: 10%;
+      transform: rotateY(180deg) translateY(-50%) ;
+    }
+    &.img-viewer-next {
+      right: 10%;
+    }
+  }
+}
+.img-viewer-current {
+  position: relative;
+  transition: transform .45s;
+  animation: preview-ani 0.5s linear;
+}
+@keyframes preview-ani {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.img-viewer-status {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0);
 }
 
-// .img-viewer-inner {
-//   width: 100%;
-//   height: 100%;
-// }
-.img-viewer-current {
-  flex-shrink: 0;
-  position: relative;
-  transition: transform .2s;
-}
 .img-viewer-close {
   position: fixed;
   right: 0px;
@@ -63,13 +93,6 @@
   line-height: 30px;
   margin: 10px auto 0;
   flex-shrink: 0;
-  .icon {
-    color: #e3e3e9;
-    cursor: pointer;
-    &:hover {
-      color: #6a82ec;
-    }
-  }
 }
 
 .img-viewer-list {
