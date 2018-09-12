@@ -5,6 +5,7 @@ import LoadingIcon from '../LoadingIcon'
 import ErrorIcon from '../ErrorIcon'
 import Image from '../Image'
 import { createObserver } from '../Image/observer'
+import { setScrollbar, resetScrollbar } from '../../utils'
 // import Store from './imgViewStore'
 function find(list, arg) {
   return list.findIndex(each => each === arg)
@@ -103,6 +104,20 @@ export default class ImgPpreview extends React.PureComponent {
     }
   }
 
+  addEffect() {
+    setScrollbar()
+    window.addEventListener('keyup', this.windowKeyUpHandle)
+    document.body.addEventListener('click', this.hideHandle)
+    document.body.style.overflow = 'hidden'
+  }
+
+  removeEffect() {
+    resetScrollbar()
+    window.removeEventListener('keyup', this.windowKeyUpHandle)
+    document.body.removeEventListener('click', this.hideHandle)
+    document.body.style.overflow = ''
+  }
+
   /**
    * 打开图片浏览器
    * 绑定keyup与click事件监听关闭
@@ -112,10 +127,7 @@ export default class ImgPpreview extends React.PureComponent {
     this.setState({
       open: true
     })
-    const { body } = document
-    window.addEventListener('keyup', this.windowKeyUpHandle)
-    body.style.overflow = 'hidden'
-    body.addEventListener('click', this.hideHandle)
+    this.addEffect()
   }
 
   /**
@@ -126,10 +138,7 @@ export default class ImgPpreview extends React.PureComponent {
     this.setState({
       open: false
     })
-    const { body } = document
-    window.removeEventListener('keyup', this.windowKeyUpHandle)
-    body.style.overflow = ''
-    body.removeEventListener('click', this.hideHandle)
+    this.removeEffect()
   }
 
   change = current => {
@@ -402,8 +411,8 @@ export default class ImgPpreview extends React.PureComponent {
 
   _renderFooter() {
     const {
-      state, prev, next, rotateFnc
-    } = this
+ state, prev, next, rotateFnc
+} = this
     const { images, current } = state
     return (
       <>

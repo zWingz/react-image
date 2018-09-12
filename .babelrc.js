@@ -1,4 +1,4 @@
-console.log('babelrc-js');
+// console.log('babelrc-js');
 module.exports = {
   "presets": [
     [
@@ -10,8 +10,7 @@ module.exports = {
     "@babel/preset-react"
   ],
   "plugins": [
-    ['@babel/proposal-class-properties', { loose: true }],
-    '@babel/plugin-external-helpers',
+    ['@babel/proposal-class-properties', { loose: true }]
     // "external-helpers"
   ],
   "env": {
@@ -19,6 +18,11 @@ module.exports = {
       "plugins": [
         "react-hot-loader/babel"
       ]
+    },
+    "production": {
+      "plugins": [
+        '@babel/plugin-external-helpers',
+      ],
     }
   }
 }
