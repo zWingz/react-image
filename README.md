@@ -3,6 +3,7 @@
 
 [DEMO](http://zwing.site/react-image/#/)
 
+[![Edit v3r46pjql0](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/v3r46pjql0)
 ## Image
 
 - Auto show the `loading` or `error` status of `img`
