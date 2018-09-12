@@ -34,7 +34,7 @@ export default {
       extensions: ['.sass', '.css']
     }),
     url({
-      limit: 10 * 1024, // inline files < 10k, copy files > 10k
+      limit: 0, // inline files < 10k, copy files > 10k
       publicPath: '/',
       emitFiles: true // defaults to true
     }),
