@@ -1,6 +1,6 @@
 {
   "name": "@zzwing/react-image",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "react image component",
   "main": "dist/index.js",
   "module": "es/index.js",
@@ -19,7 +19,8 @@
     "docz:build": "docz build",
     "lint": "eslint --ext .js,.jsx --ignore-pattern [vendor] src",
     "build:rollup": "cross-env NODE_ENV=production rollup -c",
-    "dev": "cross-env NODE_ENV=development webpack-serve --config=./build/dev.conf.js --host 0.0.0.0 --port 2222"
+    "dev": "cross-env NODE_ENV=development webpack-serve --config=./build/dev.conf.js --host 0.0.0.0 --port 2222",
+    "publish": "npm publish --registry http://registry.npmjs.org --access=public"
   },
   "author": "zhengzwing@gmail.com",
   "license": "MIT",
@@ -27,6 +28,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zWingz/react-image.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zWingz/react-image/issues"
   },
   "peerDependencies": {
     "react": ">=16.0.0",
