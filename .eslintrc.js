@@ -103,6 +103,7 @@ module.exports = {
     'class-methods-use-this': 'off',
     'react/prop-types': 0,
     'react/display-name': 'off',
+    'no-console': ["error", { allow: ["warn", "error"] }],
     'prefer-destructuring': [
       'error',
       {

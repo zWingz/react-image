@@ -4,25 +4,25 @@ module.exports = {
     [
       "@babel/preset-env",
       {
-        modules: false
+        modules: false,
+        "useBuiltIns": "entry",
+        "targets": {
+          "browsers": [
+            "last 2 versions"
+          ]
+        },
       }
     ],
     "@babel/preset-react"
   ],
   "plugins": [
     ['@babel/proposal-class-properties', { loose: true }]
-    // "external-helpers"
   ],
   "env": {
     "development": {
       "plugins": [
         "react-hot-loader/babel"
       ]
-    },
-    "production": {
-      "plugins": [
-        '@babel/plugin-external-helpers',
-      ],
     }
   }
 }

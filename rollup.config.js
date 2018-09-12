@@ -6,6 +6,7 @@ import resolve from 'rollup-plugin-node-resolve'
 import url from 'rollup-plugin-url'
 import sass from 'node-sass'
 import autoprefixer from 'autoprefixer'
+import postcssurl from 'postcss-url'
 import pkg from './package.json'
 const babelrc = require('./.babelrc.js')
 export default {
@@ -23,18 +24,17 @@ export default {
   plugins: [
     external(),
     postcss({
-      preprocessor: (content, id) => new Promise((res) => {
-        const result = sass.renderSync({ file: id })
-        res({ code: result.css.toString() })
-      }),
-      plugins: [
-        autoprefixer
-      ],
+      preprocessor: (content, id) => new Promise(res => {
+          const result = sass.renderSync({ file: id })
+          res({ code: result.css.toString() })
+        }),
+      plugins: [autoprefixer, postcssurl({ url: 'inline' })],
+      minimize: true,
       // extract: true,
       extensions: ['.sass', '.css']
     }),
     url({
-      limit: 0, // inline files < 10k, copy files > 10k
+      limit: 10 * 1024, // inline files < 10k, copy files > 10k
       publicPath: '/',
       emitFiles: true // defaults to true
     }),
@@ -43,11 +43,9 @@ export default {
       ...babelrc
       // externalHelpers: true
     }),
-    resolve(
-      {
-        extensions: ['.js', '.jsx', '.json']
-      }
-    ),
+    resolve({
+      extensions: ['.js', '.jsx', '.json']
+    }),
     commonjs()
   ]
 }

@@ -350,14 +350,13 @@ export default class ImgPpreview extends React.PureComponent {
   _renderIcon() {
     return (
       <>
-        <div className="img-viewer-close">
-          <i
-            ref={el => {
-              this.$close = el
-            }}
-            className="react-image-icon"
-            style={{ pointerEvents: 'none' }}
-          >
+        <div
+          className="img-viewer-close"
+          ref={el => {
+            this.$close = el
+          }}
+        >
+          <i className="react-image-icon" style={{ pointerEvents: 'none' }}>
             &#xe904;
           </i>
         </div>
@@ -411,8 +410,8 @@ export default class ImgPpreview extends React.PureComponent {
 
   _renderFooter() {
     const {
- state, prev, next, rotateFnc
-} = this
+      state, prev, next, rotateFnc
+    } = this
     const { images, current } = state
     return (
       <>

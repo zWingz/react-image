@@ -7,7 +7,7 @@ const config = merge(base, {
     index: './src/index.js'
   },
   output: {
-    // libraryTarget: 'commonjs2',
+    libraryTarget: 'commonjs2',
     filename: 'index.js',
     path: `${__dirname}/../dist`
   },
@@ -16,21 +16,15 @@ const config = merge(base, {
       {
         test: /\.scss$/,
         use: ['style-loader', {
-          loader: 'css-loader',
-          options: {
-            minimizer: true
-          }
+          loader: 'css-loader'
         }, 'sass-loader']
       }
     ]
   },
   externals: {
-    react: 'React',
-    'react-dom': 'ReactDOM',
-    'prop-types': 'PropTypes'
-  },
-  optimization: {
-    minimize: true
+    react: 'commonjs react',
+    'react-dom': 'commonjs react-dom',
+    'prop-types': 'commonjs prop-types'
   }
 })
 
