@@ -8,7 +8,6 @@ import sass from 'node-sass'
 import autoprefixer from 'autoprefixer'
 import postcssurl from 'postcss-url'
 import pkg from './package.json'
-const babelrc = require('./.babelrc.js')
 export default {
   input: 'src/index.js',
   output: [
@@ -25,9 +24,9 @@ export default {
     external(),
     postcss({
       preprocessor: (content, id) => new Promise(res => {
-          const result = sass.renderSync({ file: id })
-          res({ code: result.css.toString() })
-        }),
+        const result = sass.renderSync({ file: id })
+        res({ code: result.css.toString() })
+      }),
       plugins: [autoprefixer, postcssurl({ url: 'inline' })],
       minimize: true,
       // extract: true,
@@ -39,8 +38,7 @@ export default {
       emitFiles: true // defaults to true
     }),
     babel({
-      exclude: 'node_modules/**',
-      ...babelrc
+      exclude: 'node_modules/**'
       // externalHelpers: true
     }),
     resolve({
