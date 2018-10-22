@@ -4,12 +4,19 @@
  * 出现才进行加载
  * 如果浏览器不支持InterseciontObserver, 则不作操作
  */
-export const CanUseIntersecion = 'IntersectionObserver' in window
+let canUse = null
+export const CanUseIntersecion = function() {
+  if(canUse !== null) {
+    return canUse
+  }
+  canUse = 'IntersectionObserver' in window
+  return canUse
+}
 // const targets = []
 const targets = new Map()
 /* eslint-disable */
 export function createObserver(container) {
-  if(!CanUseIntersecion) {
+  if(!CanUseIntersecion()) {
     return null
   }
   const opt = {}
@@ -19,13 +26,25 @@ export function createObserver(container) {
   return new IntersectionObserver(excute, opt)
 }
 // const ins = CanUseIntersecion ? new IntersectionObserver(excute) : null
-const ins = createObserver()
+let ins = null
+
+function getObserve(observer) {
+  if(observer) {
+    return observer
+  }
+  if(!ins) {
+    ins = createObserver()
+  }
+  return ins
+}
+
 /* eslint-enable */
 
-export function observe(element, cb, observer = ins) {
-  if(!CanUseIntersecion) {
+export function observe(element, cb, obs) {
+  if(!CanUseIntersecion()) {
     return
   }
+  const observer = getObserve(obs)
   observer.observe(element)
   targets.set(element, {
     cb,
@@ -33,10 +52,11 @@ export function observe(element, cb, observer = ins) {
   })
 }
 
-export function unobserve(element, observer = ins) {
-  if(!CanUseIntersecion) {
+export function unobserve(element, obs) {
+  if(!CanUseIntersecion()) {
     return
   }
+  const observer = getObserve(obs)
   targets.delete(element)
   observer.unobserve(element)
 }
@@ -46,8 +66,10 @@ function excute(entries) {
     const { target, intersectionRatio } = each
     if(intersectionRatio > 0) {
       const tar = targets.get(target)
-      tar.cb(each)
-      unobserve(target, tar.observer)
+      if(tar) {
+        tar.cb(each)
+        unobserve(target, tar.observer)
+      }
     }
   })
 }

@@ -53,7 +53,7 @@ export default class ReactImage extends React.PureComponent {
   state = {
     isError: false,
     isLoading: true,
-    loadObserve: !CanUseIntersecion // InterseciontObserver, 监听图片是否出现在viewport
+    loadObserve: !CanUseIntersecion() // InterseciontObserver, 监听图片是否出现在viewport
   }
 
   get style() {
@@ -123,7 +123,9 @@ export default class ReactImage extends React.PureComponent {
   }
 
   componentWillUnmount() {
-    unobserve(this.refDom.current, this.props.observer)
+    if(!this.state.loadObserve) {
+      unobserve(this.refDom.current, this.props.observer)
+    }
   }
 
   render() {

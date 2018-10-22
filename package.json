@@ -23,7 +23,8 @@
     "dev": "cross-env NODE_ENV=development webpack-serve --config=./build/dev.conf.js --host 0.0.0.0 --port 2222",
     "pub": "npm run lint && npm run build:rollup && npm publish --registry http://registry.npmjs.org --access=public",
     "test": "cross-env NODE_ENV=test jest",
-    "test-watch": "cross-env NODE_ENV=test jest --watchAll"
+    "test-watch": "cross-env NODE_ENV=test jest --watchAll",
+    "test-coverage": "cross-env NODE_ENV=test jest --coverage"
   },
   "author": "zhengzwing@gmail.com",
   "license": "MIT",
