@@ -1,7 +1,7 @@
 
 import React from 'react'
 import ImageComponent from '..'
-import { shallow, mount, render } from 'enzyme'
+import { shallow, mount } from 'enzyme'
 import {PreviewApi} from '../../ImgPreview'
 import ErrorIcon from '../../ErrorIcon'
 function getComp(prop) {
@@ -9,10 +9,10 @@ function getComp(prop) {
 }
 describe('test img when IntersectionObserver is false', () => {
   it('Image set src prop', () => {
-    const result = mount(getComp())
-    expect(result.props().src).toEqual('test.png')
+    const result = shallow(getComp())
+    expect(result.find('img').prop('src')).toEqual('test.png')
     result.setProps({ src: 'test2.png' })
-    expect(result.props().src).toEqual('test2.png')
+    expect(result.find('img').prop('src')).toEqual('test2.png')
   })
   it('test onClick', () => {
     const onClick = jest.fn().mockReturnValue(null)
@@ -22,7 +22,7 @@ describe('test img when IntersectionObserver is false', () => {
   })
   it('test onLoad, and LoadingIcon should hide', () => {
     const onLoad = jest.fn().mockReturnValue(null)
-    const result = mount(getComp({onLoad}))
+    const result = shallow(getComp({onLoad}))
     expect(result.instance().state.isLoading).toBe(true)
     result.find('img').simulate('load')
     expect(onLoad).toBeCalledTimes(1)
@@ -32,7 +32,7 @@ describe('test img when IntersectionObserver is false', () => {
   })
   it('test onError, and ErrorIcon should show', () => {
     const onError = jest.fn().mockReturnValue(null)
-    const result = mount(getComp({onError}))
+    const result = shallow(getComp({onError}))
     expect(result.instance().state.isError).toBe(false)
     result.find('img').simulate('error')
     expect(onError).toBeCalledTimes(1)
@@ -42,17 +42,17 @@ describe('test img when IntersectionObserver is false', () => {
   })
   it('test delete', () => {
     const onDelete = jest.fn().mockReturnValue(null)
-    const result = mount(getComp({onDelete}))
+    const result = shallow(getComp({onDelete}))
     result.find('.react-image-icon').simulate('click')
     expect(onDelete).toBeCalledTimes(1)
   })
   it('test group & preview prop', () => {
     const group = '100'
-    const result = mount(getComp({group}))
+    const result = shallow(getComp({group}))
     expect(result.find('.mask-img').prop('data-img-group')).toEqual('100')
   })
   it('data-index-group is "null" when preview is false', () => {
-    const result = mount(
+    const result = shallow(
       getComp({group: '100', preview: false})
     )
     expect(result.find('.mask-img').prop('data-img-group')).toEqual(null)
@@ -131,7 +131,7 @@ describe('test preview', () => {
     PreviewApi.preview = preview
   })
   it('preview trigger', () => {
-    const wrapper = mount(getComp())
+    const wrapper = shallow(getComp())
     document.body.innerHTML = wrapper.html()
     wrapper.find('img').simulate('load').simulate('click')
     const dom = document.querySelectorAll(
@@ -143,9 +143,9 @@ describe('test preview', () => {
   })
   it('preview a group img', () => {
     const group = 'test'
-    const wrapper = mount(getComp({group, src: 'previewSrc'}))
-    const wrapper1 = mount(getComp({group: 'test1', src: 'test1.png'}))
-    const wrapper2 = mount(getComp({group, src: 'previewSrc2'}))
+    const wrapper = shallow(getComp({group, src: 'previewSrc'}))
+    const wrapper1 = shallow(getComp({group: 'test1', src: 'test1.png'}))
+    const wrapper2 = shallow(getComp({group, src: 'previewSrc2'}))
     document.body.innerHTML = wrapper.html() + wrapper1.html() + wrapper2.html()
     wrapper.find('img').simulate('load').simulate('click')
     expect(previewSrc).toBe(wrapper.instance().props.src)
