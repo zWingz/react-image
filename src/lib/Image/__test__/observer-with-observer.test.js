@@ -1,5 +1,5 @@
 import {
-  CanUseIntersecion, createObserver, observe, unobserve
+  CanUseIntersecion, createObserver, observe
 } from '../observer'
 
 describe('test when IntersectionObserver is false', () => {
