@@ -18,15 +18,17 @@ jobs:
     steps:
       - checkout
       - restore_cache:
+          name: Restore Yarn Package Cache
           keys:
-          - v1-cache-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-cache-
-      - run: yarn
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: yarn install
       - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
-            - node_modules
-          key: v1-cache-{{ checksum "package.json" }}
+            - ~/.cache/yarn
       - run: git checkout .
       - run: git checkout gh-pages #
       - run: git reset --hard origin/master # 同上
