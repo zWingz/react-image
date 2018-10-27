@@ -3891,7 +3891,7 @@ docz-core@^0.11.0, docz-core@^0.11.2:
     ws "^6.0.0"
     yargs "^12.0.1"
 
-docz-plugin-css@^0.11.0:
+docz-plugin-css@0.11.0:
   version "0.11.0"
   resolved "http://registry.npm.taobao.org/docz-plugin-css/download/docz-plugin-css-0.11.0.tgz#affa823f1fecc4ad1e5d3903edc44244a31ff5fa"
   integrity sha1-r/qCPx/sxK0eXTkD7cRCRKMf9fo=
@@ -3916,7 +3916,7 @@ docz-plugin-css@^0.11.0:
     webpack "^4.17.1"
     webpack-chain "^4.9.0"
 
-docz-theme-default@^0.11.2:
+docz-theme-default@0.11.2, docz-theme-default@^0.11.2:
   version "0.11.2"
   resolved "http://registry.npm.taobao.org/docz-theme-default/download/docz-theme-default-0.11.2.tgz#288bd7fb5b67467c685460dc18b1ea0eb2e2ce40"
   integrity sha1-KIvX+1tnRnxoVGDcGLHqDrLizkA=
@@ -3946,7 +3946,7 @@ docz-theme-default@^0.11.2:
     react-sizes "^1.0.4"
     webfontloader "^1.6.28"
 
-docz@^0.11.2:
+docz@0.11.2, docz@^0.11.2:
   version "0.11.2"
   resolved "http://registry.npm.taobao.org/docz/download/docz-0.11.2.tgz#e5293e0f5fc8ee19b2191514837240acb6590223"
   integrity sha1-5Sk+D1/I7hmyGRUUg3JArLZZAiM=
@@ -9796,9 +9796,9 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.2.7:
     strip-json-comments "~2.0.1"
 
 re-resizable@^4.8.1:
-  version "4.9.0"
-  resolved "http://registry.npm.taobao.org/re-resizable/download/re-resizable-4.9.0.tgz#0160728b9d7e32371fb26562221678ae643e6557"
-  integrity sha1-AWByi51+MjcfsmViIhZ4rmQ+ZVc=
+  version "4.9.2"
+  resolved "http://registry.npm.taobao.org/re-resizable/download/re-resizable-4.9.2.tgz#fbf404e71636bb9f1d5981643ce2126f02ac575b"
+  integrity sha1-+/QE5xY2u58dWYFkPOISbwKsV1s=
 
 react-codemirror2@^5.1.0:
   version "5.1.0"
