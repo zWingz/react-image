@@ -63,8 +63,8 @@ export function unobserve(element, obs) {
 
 function excute(entries) {
   entries.forEach(each => {
-    const { target, intersectionRatio } = each
-    if(intersectionRatio > 0) {
+    const { target, intersectionRatio, isIntersecting } = each
+    if(intersectionRatio > 0 || isIntersecting) {
       const tar = targets.get(target)
       if(tar) {
         tar.cb(each)
