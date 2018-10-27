@@ -55,3 +55,4 @@ website
 .docz
 lib/**
 es
+coverage/

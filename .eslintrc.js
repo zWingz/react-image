@@ -12,7 +12,8 @@ module.exports = {
     node: true,
     commonjs: true,
     es6: true,
-    amd: true
+    amd: true,
+    "jest": true
   },
   plugins: [],
   rules: {
