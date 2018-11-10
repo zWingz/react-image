@@ -24,6 +24,22 @@ refs:
       run:
         name: Test
         command: yarn test
+    - &SetupGithub
+      run:
+        name: Setup Github
+        command: |
+          git config user.name "zWingz"
+          git config user.email "371657110@qq.com"
+    - &Push-gh-pages
+      run:
+        name: Push gh-pages
+        command: |
+          git add .
+          git add -u
+          git commit -m "Updated by circleci - `date`"
+          git push --force origin gh-pages
+
+
 jobs:
   master:
     <<: *container
@@ -44,12 +60,8 @@ jobs:
       - run: git checkout gh-pages #
       - run: git reset --hard origin/master # 同上
       - *Build_docz
-      - run: git add .
-      - run: git add -u
-      - run: git config user.name "zWingz"
-      - run: git config user.email "371657110@qq.com"
-      - run: git commit -m "Updated by circleci - `date`"
-      - run: git push --force origin gh-pages
+      - *SetupGithub
+      - *Push-gh-pages
 
   dev:
     <<: *container
