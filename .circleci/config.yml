@@ -3,41 +3,82 @@
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
 version: 2
-jobs:
-  build:
+
+refs:
+  container: $container
     docker:
-      # specify the version you desire here
       - image: node:latest
-
-    working_directory: ~/react-image
-
-    branches:
-      only:
-        - master # 这个是配置文件的分支名，注意不要写错分支
-
+    working_directory: ~/repo
+  steps:
+    - &Install
+      run:
+        name: Install Dependencies
+        command: yarn install
+    - &Build_docz
+      run:
+        name: Build doc
+        command: |
+          yarn docz:build
+          mv website/* ./
+    - &Test
+      run:
+        name: Test
+        command: yarn test
+jobs:
+  master:
+    <<: *container
     steps:
       - checkout
       - restore_cache:
           name: Restore Yarn Package Cache
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
-      - run:
-          name: Install Dependencies
-          command: yarn install
+      - *Install
       - save_cache:
           name: Save Yarn Package Cache
           key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+      - *Test
       - run: git checkout .
       - run: git checkout gh-pages #
       - run: git reset --hard origin/master # 同上
-      - run: yarn docz:build
-      - run: mv website/* ./
+      - *Build_docz
       - run: git add .
       - run: git add -u
       - run: git config user.name "zWingz"
       - run: git config user.email "371657110@qq.com"
       - run: git commit -m "Updated by circleci - `date`"
       - run: git push --force origin gh-pages
-      # - run: git push --force https://${gh_token}@github.com:zWingz/react-image.git gh-pages:gh-pages
+
+  dev:
+    <<: *container
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - *Install
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - *Test
+
+workflows:
+  version: 2
+  dev:
+    jobs:
+      - dev:
+          filters:
+            branches:
+              ignore:
+                - master
+                - gh-pages
+  master:
+    jobs:
+      - master:
+          filters:
+            only: master
