@@ -28,7 +28,7 @@ refs:
       run:
         name: Codecov
         command: |
-          yarn add -g codecov
+          yarn global add codecov
           codecov
     - &SetupGithub
       run:
