@@ -24,6 +24,12 @@ refs:
       run:
         name: Test
         command: yarn test
+    - &Codecov
+      run:
+        name: Codecov
+        command: |
+          yarn add codecov -g
+          codecov
     - &SetupGithub
       run:
         name: Setup Github
@@ -56,6 +62,7 @@ jobs:
           paths:
             - ~/.cache/yarn
       - *Test
+      - *Codecov
       - run: git checkout .
       - run: git checkout gh-pages #
       - run: git reset --hard origin/master # 同上
