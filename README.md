@@ -1,5 +1,5 @@
 # A React Image Component
-[![CircleCI](https://circleci.com/gh/zWingz/react-image/tree/master.svg?style=svg)](https://circleci.com/gh/zWingz/react-image/tree/master)
+[![CircleCI](https://circleci.com/gh/zWingz/react-image/tree/master.svg?style=svg)](https://circleci.com/gh/zWingz/react-image/tree/master) [![codecov](https://codecov.io/gh/zWingz/react-image/branch/master/graph/badge.svg)](https://codecov.io/gh/zWingz/react-image)
 
 [DEMO](http://zwing.site/react-image/#/)
 
