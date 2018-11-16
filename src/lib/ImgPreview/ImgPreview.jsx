@@ -213,6 +213,7 @@ export default class ImgPpreview extends React.PureComponent {
       y: e.clientY
     })
     container.style.cursor = 'move'
+    console.log(container.style.cursor)
     container.addEventListener('mousemove', this.mouseMoveHandle, false)
   }
 

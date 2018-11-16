@@ -126,9 +126,66 @@ describe('test preview img in imglist', () => {
     expect(ins.state.images).toEqual(newList)
     expect(wrapper.find(imgCurrent).prop('src')).toEqual(newList[0])
   })
-  it('preview a img not in old list, it will replace old list', () => {
+  it('preview a img not in list, it will replace old list', () => {
     ins.exportPreview('new.jpg')
     expect(ins.state.current).toEqual(0)
     expect(ins.state.images).toEqual(['new.jpg'])
+  })
+})
+
+
+describe('test img transform', () => {
+  const wrapper = mount(getComp())
+  const ins = wrapper.instance()
+  ins.exportPreview('1.src')
+  wrapper
+    .find(imgCurrent)
+    .simulate('load', { target: { naturalWidth: 1024 } })
+  // jest.useFakeTimers()
+  const container = wrapper.find('#imgPreview')
+  wrapper.update()
+  describe('test scale', () => {
+    let expectScale = 0.75
+    const preventDefault = jest.fn()
+    const stopPropagation = jest.fn()
+    it('test scale down', () => {
+      // setTimeout(() => {
+      expect(ins.state.scale).toEqual(expectScale)
+      container.simulate('wheel', { deltaY: -10, preventDefault, stopPropagation })
+      expect(preventDefault).toBeCalledTimes(1)
+      expect(stopPropagation).toBeCalledTimes(1)
+      expectScale *= 0.8
+      expect(ins.state.scale).toEqual(expectScale)
+      // done()
+      // }, 50)
+    })
+    it('test scale up', () => {
+      // setTimeout(() => {
+      container.simulate('wheel', { deltaY: 10, preventDefault, stopPropagation })
+      expectScale *= 1.2
+      expect(ins.state.scale).toEqual(expectScale)
+      // done()
+      // }, 50)
+    })
+  })
+  describe('test move', () => {
+    const startX = 100
+    const startY = 100
+    const stopPropagation = jest.fn()
+    expect(ins.state.left).toEqual(0)
+    expect(ins.state.top).toEqual(0)
+    const img = wrapper.find(imgCurrent)
+    it('test mouseDown', () => {
+      img.simulate('mousedown', { button: 1, stopPropagation})
+      expect(stopPropagation).toBeCalledTimes(1)
+      img.simulate('mousedown', {
+        button: 0, stopPropagation, clientX: startX, clientY: startY
+      })
+      wrapper.update()
+      ins.forceUpdate()
+      expect(ins.state.x).toEqual(100)
+      expect(ins.state.y).toEqual(100)
+      expect(container.getDOMNode().style.cursor).toEqual('move')
+    })
   })
 })
