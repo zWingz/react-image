@@ -213,7 +213,6 @@ export default class ImgPpreview extends React.PureComponent {
       y: e.clientY
     })
     container.style.cursor = 'move'
-    console.log(container.style.cursor)
     container.addEventListener('mousemove', this.mouseMoveHandle, false)
   }
 
@@ -430,11 +429,11 @@ export default class ImgPpreview extends React.PureComponent {
             >
               &#xe914;
             </i>
-            <i className="react-image-icon" onClick={() => rotateFnc(90)}>
+            <i className="react-image-icon img-viewer-rotate" onClick={() => rotateFnc(90)}>
               &#xe91a;
             </i>
             <i
-              className="react-image-icon"
+              className="react-image-icon img-viewer-rotate"
               onClick={() => rotateFnc(-90)}
               style={{ transform: 'rotateY(180deg)' }}
             >
@@ -500,12 +499,7 @@ export default class ImgPpreview extends React.PureComponent {
 
 ImgPpreview.newInstance = function newPreviewInstance(callback) {
   const div = document.createElement('div')
-  let called = false
   function ref(ins) {
-    if(called) {
-      return
-    }
-    called = true
     callback({
       preview(current, list) {
         ins.exportPreview(current, list)
@@ -513,8 +507,8 @@ ImgPpreview.newInstance = function newPreviewInstance(callback) {
       show() {
         ins.show()
       },
-      close() {
-        ins.close()
+      hide() {
+        ins.hide()
       },
       component: ins,
       destroy() {

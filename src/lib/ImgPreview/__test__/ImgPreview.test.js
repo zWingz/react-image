@@ -1,9 +1,10 @@
 import React from 'react'
-import ImgPreview from '..'
+import ImgPreview, { PreviewApi } from '..'
 import { shallow, mount } from 'enzyme'
 import LoadingIcon from '../../LoadingIcon'
 import Image from '../../Image'
 import ErrorIcon from '../../ErrorIcon'
+
 function getComp() {
   return <ImgPreview />
 }
@@ -37,9 +38,7 @@ describe('test preview img with not load', () => {
     expect(wrapper.find(imgCurrent).prop('src')).toEqual(src)
   })
   it('test onload and error status', () => {
-    expect(
-      wrapper.find(imgCurrent).hasClass('dis-none')
-    ).toBeTruthy()
+    expect(wrapper.find(imgCurrent).hasClass('dis-none')).toBeTruthy()
     expect(wrapper.find(LoadingIcon)).toHaveLength(1)
     expect(wrapper.find(ErrorIcon)).toHaveLength(0)
   })
@@ -70,7 +69,7 @@ describe('test preview image with onload', () => {
     expect(ins.state.loaded).toBeTruthy()
     expect(ins.state.error).toBeFalsy()
   })
-  it('scale is 0.75', (done) => {
+  it('scale is 0.75', done => {
     setTimeout(() => {
       expect(ins.state.scale).toBe(0.75)
       done()
@@ -98,7 +97,6 @@ describe('test preview img on error', () => {
     expect(wrapper.find(ErrorIcon)).toHaveLength(1)
   })
 })
-
 
 describe('test preview img in imglist', () => {
   const src1 = '1.jpg'
@@ -133,14 +131,11 @@ describe('test preview img in imglist', () => {
   })
 })
 
-
 describe('test img transform', () => {
   const wrapper = mount(getComp())
   const ins = wrapper.instance()
   ins.exportPreview('1.src')
-  wrapper
-    .find(imgCurrent)
-    .simulate('load', { target: { naturalWidth: 1024 } })
+  wrapper.find(imgCurrent).simulate('load', { target: { naturalWidth: 1024 } })
   // jest.useFakeTimers()
   const container = wrapper.find('#imgPreview')
   wrapper.update()
@@ -151,7 +146,11 @@ describe('test img transform', () => {
     it('test scale down', () => {
       // setTimeout(() => {
       expect(ins.state.scale).toEqual(expectScale)
-      container.simulate('wheel', { deltaY: -10, preventDefault, stopPropagation })
+      container.simulate('wheel', {
+        deltaY: -10,
+        preventDefault,
+        stopPropagation
+      })
       expect(preventDefault).toBeCalledTimes(1)
       expect(stopPropagation).toBeCalledTimes(1)
       expectScale *= 0.8
@@ -161,7 +160,11 @@ describe('test img transform', () => {
     })
     it('test scale up', () => {
       // setTimeout(() => {
-      container.simulate('wheel', { deltaY: 10, preventDefault, stopPropagation })
+      container.simulate('wheel', {
+        deltaY: 10,
+        preventDefault,
+        stopPropagation
+      })
       expectScale *= 1.2
       expect(ins.state.scale).toEqual(expectScale)
       // done()
@@ -176,10 +179,13 @@ describe('test img transform', () => {
     expect(ins.state.top).toEqual(0)
     const img = wrapper.find(imgCurrent)
     it('test mouseDown', () => {
-      img.simulate('mousedown', { button: 1, stopPropagation})
+      img.simulate('mousedown', { button: 1, stopPropagation })
       expect(stopPropagation).toBeCalledTimes(1)
       img.simulate('mousedown', {
-        button: 0, stopPropagation, clientX: startX, clientY: startY
+        button: 0,
+        stopPropagation,
+        clientX: startX,
+        clientY: startY
       })
       wrapper.update()
       ins.forceUpdate()
@@ -187,5 +193,218 @@ describe('test img transform', () => {
       expect(ins.state.y).toEqual(100)
       expect(container.getDOMNode().style.cursor).toEqual('move')
     })
+    it('test mouseMove', () => {
+      const endX = 500
+      const endY = -500
+      const startLeft = ins.state.left
+      const startTop = ins.state.top
+      const event = new MouseEvent('mousemove', {
+        clientX: endX,
+        clientY: endY
+      })
+      container.getDOMNode().dispatchEvent(event)
+      expect(ins.state.x).toEqual(endX)
+      expect(ins.state.y).toEqual(endY)
+      expect(ins.state.left).toEqual(startLeft + endX - startX)
+      expect(ins.state.top).toEqual(startTop + endY - startY)
+    })
+    it('test mouseUp', () => {
+      container.simulate('mouseup')
+      expect(container.getDOMNode().style.cursor).toEqual('initial')
+    })
+    it('it should remove mouseMove listener after mouseUp', () => {
+      const mouseMoveEvent = new MouseEvent('mousemove', {
+        clientX: 100,
+        clientY: 100
+      })
+      const initX = ins.state.x
+      const initY = ins.state.y
+      container.getDOMNode().dispatchEvent(mouseMoveEvent)
+      expect(ins.state.x).toEqual(initX)
+      expect(ins.state.y).toEqual(initY)
+    })
+  })
+  describe('test rotate', () => {
+    const rotate = wrapper.find('.img-viewer-rotate')
+    expect(rotate).toHaveLength(2)
+    rotate.at(0).simulate('click')
+    expect(ins.state.rotate).toEqual(90)
+    rotate.at(1).simulate('click')
+    expect(ins.state.rotate).toEqual(0)
+  })
+})
+
+describe('test change index', () => {
+  const wrapper = shallow(getComp())
+  const ins = wrapper.instance()
+  const src = ['1.jpg', '2.jpg', '3.jpg', '4.jpg']
+  ins.exportPreview('1.jpg', src)
+  // expect(ins.state.current).toEqual(0)
+  it('test prev', () => {
+    const prev = wrapper.find('.img-viewer-prev')
+    expect(prev).toHaveLength(1)
+    prev.simulate('click')
+    expect(ins.state.current).toEqual(3)
+    expect(wrapper.find(imgCurrent).prop('src')).toEqual(src[3])
+  })
+  it('test next', () => {
+    const next = wrapper.find('.img-viewer-next')
+    expect(next).toHaveLength(1)
+    next.simulate('click')
+    expect(ins.state.current).toEqual(0)
+    expect(wrapper.find(imgCurrent).prop('src')).toEqual(src[0])
+  })
+  it('test keyup code 39 is next', () => {
+    const event = new KeyboardEvent('keyup', {
+      keyCode: 39
+    })
+    window.dispatchEvent(event)
+    expect(ins.state.current).toEqual(1)
+    expect(wrapper.find(imgCurrent).prop('src')).toEqual(src[1])
+  })
+  it('test keyup code 37 is prev', () => {
+    const event = new KeyboardEvent('keyup', {
+      keyCode: 37
+    })
+    window.dispatchEvent(event)
+    expect(ins.state.current).toEqual(0)
+    expect(wrapper.find(imgCurrent).prop('src')).toEqual(src[0])
+  })
+  it('test chang in preview list', () => {
+    const result = 2
+    expect(wrapper.find('.img-viewer-list-item')).toHaveLength(4)
+    wrapper.find('.img-viewer-list-item').at(result).simulate('click')
+    expect(ins.state.current).toEqual(result)
+    expect(wrapper.find(imgCurrent).prop('src')).toEqual(src[result])
+  })
+})
+
+describe('test show/hide', () => {
+  const wrapper = mount(getComp())
+  const ins = wrapper.instance()
+  it('test show', () => {
+    wrapper.setState({
+      top: 100,
+      left: 100,
+      scale: 100,
+      rotate: 100,
+      changed: true,
+      loaded: true
+    })
+    expect(wrapper.state()).toMatchObject({
+      top: 100,
+      left: 100,
+      scale: 100,
+      rotate: 100,
+      changed: true,
+      loaded: true
+    })
+    ins.show()
+    expect(wrapper.state()).toMatchObject({
+      top: 0,
+      left: 0,
+      scale: 0,
+      rotate: 0,
+      loaded: false,
+      open: true
+    })
+    expect(document.body.style.overflow).toEqual('hidden')
+  })
+  it('test hide', () => {
+    ins.hide()
+    expect(wrapper.state('open')).toBe(false)
+    expect(document.body.style.overflow).toEqual('')
+    ins.show()
+    const hide = jest.spyOn(ins, 'hide')
+    const event = new KeyboardEvent('keyup', {
+      keyCode: 27
+    })
+    window.dispatchEvent(event)
+    expect(hide).toBeCalledTimes(1)
+    const bodyHideHandle = jest.spyOn(ins, 'hideHandle')
+    ins.show()
+    const bodyClickEvent = new MouseEvent('click', {
+      bubbles: true
+    })
+    document.body.dispatchEvent(bodyClickEvent)
+    expect(bodyHideHandle).toBeCalledTimes(1)
+  })
+})
+
+describe('test getInstance', () => {
+  let instance
+  it('test mount dom', () => {
+    expect(document.getElementById('imgPreview')).toBeFalsy()
+    ImgPreview.newInstance(i => {
+      instance = i
+    })
+    expect(document.getElementById('imgPreview')).toBeTruthy()
+  })
+  it('test instance property', () => {
+    expect(instance).toHaveProperty('preview')
+    expect(instance).toHaveProperty('show')
+    expect(instance).toHaveProperty('hide')
+    expect(instance).toHaveProperty('component')
+    expect(instance).toHaveProperty('destroy')
+    expect(instance.component).toBeInstanceOf(ImgPreview)
+  })
+  it('test instance preview', () => {
+    const ins = instance.component
+    ins.exportPreview = jest.fn()
+    instance.preview('1', ['1', '2'])
+    expect(ins.exportPreview).toBeCalledTimes(1)
+    expect(ins.exportPreview).toBeCalledWith('1', ['1', '2'])
+  })
+  it('test instance show', () => {
+    const ins = instance.component
+    expect(ins).toBeInstanceOf(ImgPreview)
+    ins.show = jest.fn()
+    instance.show()
+    expect(ins.show).toBeCalledTimes(1)
+  })
+  it('test instance hide', () => {
+    const ins = instance.component
+    expect(ins).toBeInstanceOf(ImgPreview)
+    ins.hide = jest.fn()
+    instance.hide()
+    expect(ins.hide).toBeCalledTimes(1)
+  })
+  it('test instance destroy', () => {
+    const ins = instance.component
+    expect(ins).toBeInstanceOf(ImgPreview)
+    instance.destroy()
+    expect(document.getElementById('imgPreview')).toBeFalsy()
+  })
+})
+
+describe('test api', () => {
+  it('test api', () => {
+    const preview = jest.fn()
+    const show = jest.fn()
+    const hide = jest.fn()
+    const destroy = jest.fn()
+    ImgPreview.newInstance = function(callback) {
+      callback({
+        preview(current, list) {
+          preview(current, list)
+        },
+        show() {
+          show()
+        },
+        hide() {
+          hide()
+        },
+        destroy
+      })
+    }
+    PreviewApi.preview('1', ['1', '2'])
+    expect(preview).toBeCalledTimes(1)
+    expect(preview).toBeCalledWith('1', ['1', '2'])
+    PreviewApi.show()
+    expect(show).toBeCalledTimes(1)
+    PreviewApi.hide()
+    expect(hide).toBeCalledTimes(1)
+    PreviewApi.destroy()
+    expect(destroy).toBeCalledTimes(1)
   })
 })
