@@ -48,7 +48,7 @@ describe('test img when IntersectionObserver is false', () => {
   it('test group & preview prop', () => {
     const group = '100'
     const result = shallow<ImageComponent>(getComp({ group: group }))
-    expect(result.find('.mask-img').getDOMNode().getAttribute('data-img-group')).toEqual('100')
+    expect(result.find('.mask-img').prop('data-img-group')).toEqual('100')
   })
   it('data-index-group is "null" when preview is false', () => {
     const result = shallow<ImageComponent>(getComp({ group: '100', preview: false }))

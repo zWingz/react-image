@@ -105,11 +105,6 @@
       "tsx",
       "js"
     ],
-    "globals": {
-      "ts-jest": {
-        "tsConfigFile": "tsconfig.json"
-      }
-    },
     "setupTestFrameworkScriptFile": "<rootDir>/test/setup.ts",
     "coveragePathIgnorePatterns": [
       "<rootDir>/test/",

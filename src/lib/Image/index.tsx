@@ -87,7 +87,7 @@ export default class ReactImage extends PureComponent<iImageProp> {
     width: 100,
     group: 'default',
     objectFit: 'cover',
-    previe: true,
+    preview: true,
     mask: true
   }
   refDom: RefObject<HTMLDivElement> = null

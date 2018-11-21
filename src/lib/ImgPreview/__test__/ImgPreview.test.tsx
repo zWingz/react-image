@@ -380,35 +380,35 @@ describe('test getInstance', () => {
   })
 })
 
-// describe('test api', () => {
-//   it('test api', () => {
-//     const preview = jest.fn()
-//     const show = jest.fn()
-//     const hide = jest.fn()
-//     const destroy = jest.fn()
-//     ImgPreview.newInstance = function(callback) {
-//       callback({
-//         preview(current, list) {
-//           preview(current, list)
-//         },
-//         show() {
-//           show()
-//         },
-//         component: {} as ImgPreview,
-//         hide() {
-//           hide()
-//         },
-//         destroy
-//       })
-//     }
-//     PreviewApi.preview('1', ['1', '2'])
-//     expect(preview).toBeCalledTimes(1)
-//     expect(preview).toBeCalledWith('1', ['1', '2'])
-//     PreviewApi.show()
-//     expect(show).toBeCalledTimes(1)
-//     PreviewApi.hide()
-//     expect(hide).toBeCalledTimes(1)
-//     PreviewApi.destroy()
-//     expect(destroy).toBeCalledTimes(1)
-//   })
-// })
+describe('test api', () => {
+  it('test api', () => {
+    const preview = jest.fn()
+    const show = jest.fn()
+    const hide = jest.fn()
+    const destroy = jest.fn()
+    ImgPreview.newInstance = function(callback) {
+      callback({
+        preview(current, list) {
+          preview(current, list)
+        },
+        show() {
+          show()
+        },
+        component: {} as ImgPreview,
+        hide() {
+          hide()
+        },
+        destroy
+      })
+    }
+    PreviewApi.preview('1', ['1', '2'])
+    expect(preview).toBeCalledTimes(1)
+    expect(preview).toBeCalledWith('1', ['1', '2'])
+    PreviewApi.show()
+    expect(show).toBeCalledTimes(1)
+    PreviewApi.hide()
+    expect(hide).toBeCalledTimes(1)
+    PreviewApi.destroy()
+    expect(destroy).toBeCalledTimes(1)
+  })
+})
