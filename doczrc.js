@@ -5,6 +5,7 @@ export default {
   description: 'A React Component',
   dest: 'website',
   // src: './doc',
+  typescript: true,
   protocol: process.env.NODE_ENV === 'production' ? 'https' : 'http',
   themeConfig: {
     mode: 'light'

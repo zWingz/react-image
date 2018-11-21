@@ -1,11 +1,57 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import * as React from 'react'
+import * as PropTypes from 'prop-types'
+import { RefObject, createRef, ImgHTMLAttributes, CSSProperties, PureComponent } from 'react'
 import './style.scss'
 import LoadingIcon from '../LoadingIcon'
 import { CanUseIntersecion, observe, unobserve } from './observer'
 import { PreviewApi } from '../ImgPreview'
 import ErrorIcon from '../ErrorIcon'
-export default class ReactImage extends React.PureComponent {
+import { ObjectFitProperty } from 'csstype'
+
+export type iImageProp = {
+  src: string;
+  height?: string | number;
+  width?: string | number;
+  style?: CSSProperties;
+  group?: string | number;
+  objectFit?: ObjectFitProperty;
+  preview?: boolean;
+  imgProps?: ImgHTMLAttributes<any>;
+  mask?: boolean;
+  onClick?: Function;
+  onError?: (src: string) => void;
+  onLoad?: (src: string) => void;
+  onDelete?: (src: string) => void;
+  alt?: string;
+  className?: string;
+  observer?: IntersectionObserver;
+}
+
+export default class ReactImage extends PureComponent<iImageProp> {
+
+  get style(): CSSProperties {
+    const { height, width } = this.props
+    return {
+      width: width + 'px',
+      height: height ? height + 'px' : 'initial',
+      ...this.props.style
+    }
+  }
+
+  get imgStyle(): CSSProperties {
+    const { isLoading, isError } = this.state
+    const ret = {
+      objectFit: this.props.objectFit
+    }
+    const { imgProps } = this.props
+    if (imgProps && imgProps.style) {
+      Object.assign(ret, imgProps.style)
+    }
+    Object.assign(ret, {
+      display: isLoading || isError ? 'none' : ''
+    })
+    return ret
+  }
   static propTypes = {
     /** Component Style */
     style: PropTypes.object,
@@ -41,43 +87,20 @@ export default class ReactImage extends React.PureComponent {
     width: 100,
     group: 'default',
     objectFit: 'cover',
-    preview: true,
+    previe: true,
     mask: true
   }
-
-  constructor() {
-    super()
-    this.refDom = React.createRef()
-  }
+  refDom: RefObject<HTMLDivElement> = null
 
   state = {
     isError: false,
     isLoading: true,
-    loadObserve: !CanUseIntersecion() // InterseciontObserver, 监听图片是否出现在viewport
+    loadObserve: !CanUseIntersecion() // IntersecintObserver, 监听图片是否出现在viewport
   }
 
-  get style() {
-    const { height, width } = this.props
-    return {
-      width: width + 'px',
-      height: height ? height + 'px' : 'initial',
-      ...this.props.style
-    }
-  }
-
-  get imgStyle() {
-    const { isLoading, isError } = this.state
-    const ret = {
-      objectFit: this.props.objectFit
-    }
-    const { imgProps } = this.props
-    if(imgProps && imgProps.style) {
-      Object.assign(ret, imgProps.style)
-    }
-    Object.assign(ret, {
-      display: isLoading || isError ? 'none' : ''
-    })
-    return ret
+  constructor(p) {
+    super(p)
+    this.refDom = createRef()
   }
 
   onError = () => {
@@ -97,14 +120,14 @@ export default class ReactImage extends React.PureComponent {
     })
     onLoad && onLoad(src)
   }
-
+  onDelete = () => {
+    this.props.onDelete(this.props.src)
+  }
   onClickHandler = () => {
     const { isLoading, isError } = this.state
-    const {
-      src, group, preview, onClick
-    } = this.props
-    if(preview && src && !isLoading && !isError) {
-      const dom = document.querySelectorAll(
+    const { src, group, preview, onClick } = this.props
+    if (preview && src && !isLoading && !isError) {
+      const dom: NodeListOf<HTMLImageElement> = document.querySelectorAll(
         `.mask-img[data-img-group="${group}"]`
       )
       const list = Array.from(dom).map(each => each.dataset.imgSrc)
@@ -115,15 +138,19 @@ export default class ReactImage extends React.PureComponent {
 
   componentDidMount() {
     // pushToGroup(this.props.group, this.props.src)
-    observe(this.refDom.current, () => {
-      this.setState({
-        loadObserve: true
-      })
-    }, this.props.observer)
+    observe(
+      this.refDom.current,
+      () => {
+        this.setState({
+          loadObserve: true
+        })
+      },
+      this.props.observer
+    )
   }
 
   componentWillUnmount() {
-    if(!this.state.loadObserve) {
+    if (!this.state.loadObserve) {
       unobserve(this.refDom.current, this.props.observer)
     }
   }
@@ -151,11 +178,11 @@ export default class ReactImage extends React.PureComponent {
         ref={this.refDom}
       >
         {onDelete ? (
-          <span className="delete-img">
+          <span className='delete-img'>
             <i
-              className="react-image-icon"
+              className='react-image-icon'
               style={{ display: 'inline-block' }}
-              onClick={() => onDelete(src)}
+              onClick={this.onDelete}
             >
               &#xe904;
             </i>
@@ -173,10 +200,10 @@ export default class ReactImage extends React.PureComponent {
         )}
         {isLoading && (
           <div
-            className="mask-loading"
+            className='mask-loading'
             style={{ minHeight: `${height || 100}px` }}
           >
-            <LoadingIcon size="sm" />
+            <LoadingIcon size='sm' />
           </div>
         )}
         {isError && <ErrorIcon style={{ width: '100%', height: '100%' }} />}

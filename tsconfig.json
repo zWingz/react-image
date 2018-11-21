@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "lib": [
+      "es7",
+      "dom",
+    ],
+    "jsx": "react",
+    "target": "es6",
+    "module" : "esNext",
+    "moduleResolution": "node",
+    "types": ["react", "node", "jest"],
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    // "experimentalDecorators": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}

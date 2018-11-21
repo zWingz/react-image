@@ -1,18 +1,19 @@
-import Preview from './ImgPreview'
+import Preview, { PreviewInstanceInterface, PreviewInstanceCallback, PreviewInterface } from './ImgPreview'
 import './style.scss'
 
-let ins = null
+let ins: PreviewInstanceInterface = null
+
 /**
  * 获取ImgPreview实例
  *
  * @param {Function} callback 回调
  */
-function getInstance(callback) {
+function getInstance(callback: PreviewInstanceCallback) {
   if(ins) {
     callback(ins)
     return
   }
-  Preview.newInstance(instance => {
+  Preview.newInstance((instance: PreviewInstanceInterface) => {
     if(ins) {
       callback(ins)
       return
@@ -28,7 +29,7 @@ function getInstance(callback) {
  * @param {String} fun 方法名
  * @returns Function
  */
-function exec(fun) {
+function exec(fun: string) {
   return function(...arg) {
     getInstance(instance => {
       instance[fun](...arg)
@@ -36,7 +37,10 @@ function exec(fun) {
   }
 }
 
-const Api = {
+export const Api: {destroy: () => void, preview: PreviewInterface, show: () => void, hide: () => void} = {
+  preview: null,
+  show: null,
+  hide: null,
   destroy() {
     if(ins) {
       ins.destroy()

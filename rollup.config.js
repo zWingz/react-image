@@ -1,15 +1,15 @@
-import babel from 'rollup-plugin-babel'
 import commonjs from 'rollup-plugin-commonjs'
 import external from 'rollup-plugin-peer-deps-external'
 import postcss from 'rollup-plugin-postcss'
 import resolve from 'rollup-plugin-node-resolve'
+import typescript from 'rollup-plugin-typescript'
 import url from 'rollup-plugin-url'
 import sass from 'node-sass'
 import autoprefixer from 'autoprefixer'
 import postcssurl from 'postcss-url'
 import pkg from './package.json'
 export default {
-  input: 'src/index.js',
+  input: 'src/index.ts',
   output: [
     {
       file: pkg.main,
@@ -32,17 +32,14 @@ export default {
       // extract: true,
       extensions: ['.sass', '.css']
     }),
+    typescript(),
     url({
       limit: 10 * 1024, // inline files < 10k, copy files > 10k
       publicPath: '/',
       emitFiles: true // defaults to true
     }),
-    babel({
-      exclude: 'node_modules/**'
-      // externalHelpers: true
-    }),
     resolve({
-      extensions: ['.js', '.jsx', '.json']
+      extensions: ['.ts', '.tsx', '.json']
     }),
     commonjs()
   ]

@@ -56,3 +56,4 @@ website
 lib/**
 es
 coverage/
+.awcache

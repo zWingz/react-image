@@ -5,7 +5,7 @@
  * 如果浏览器不支持InterseciontObserver, 则不作操作
  */
 let canUse = null
-export const CanUseIntersecion = function() {
+export const CanUseIntersecion: () => boolean = function() {
   if(canUse !== null) {
     return canUse
   }
@@ -13,13 +13,16 @@ export const CanUseIntersecion = function() {
   return canUse
 }
 // const targets = []
-const targets = new Map()
+const targets = new Map<
+Element,
+{ cb: Function; observer: IntersectionObserver }
+>()
 /* eslint-disable */
-export function createObserver(container) {
+export function createObserver(container?: HTMLElement) {
   if(!CanUseIntersecion()) {
     return null
   }
-  const opt = {}
+  const opt: IntersectionObserverInit = {}
   if(container) {
     opt.root = container
   }
@@ -28,7 +31,7 @@ export function createObserver(container) {
 // const ins = CanUseIntersecion ? new IntersectionObserver(excute) : null
 let ins = null
 
-function getObserve(observer) {
+function getObserve(observer: IntersectionObserver) {
   if(observer) {
     return observer
   }
@@ -40,7 +43,7 @@ function getObserve(observer) {
 
 /* eslint-enable */
 
-export function observe(element, cb, obs) {
+export function observe(element: Element, cb, obs?: IntersectionObserver) {
   if(!CanUseIntersecion()) {
     return
   }
@@ -52,7 +55,7 @@ export function observe(element, cb, obs) {
   })
 }
 
-export function unobserve(element, obs) {
+export function unobserve(element: Element, obs?: IntersectionObserver) {
   if(!CanUseIntersecion()) {
     return
   }
@@ -61,7 +64,7 @@ export function unobserve(element, obs) {
   observer.unobserve(element)
 }
 
-function excute(entries) {
+function excute(entries: IntersectionObserverEntry[]) {
   entries.forEach(each => {
     const { target, intersectionRatio, isIntersecting } = each
     if(intersectionRatio > 0 || isIntersecting) {
