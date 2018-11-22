@@ -10,6 +10,7 @@ export default {
   themeConfig: {
     mode: 'light'
   },
+  codeSandbox: false,
   hashRouter: true,
   plugins: [
     css({

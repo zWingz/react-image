@@ -3,22 +3,62 @@ name: API
 route: /api
 ---
 
-import { Playground, PropsTable } from 'docz'
-import {Image, Preview} from '../src'
-
 # API
 
 ## Image
 
-<PropsTable of={Image}/>
+| func      | desc                      | params                | default   |
+| --------- | ------------------------- | --------------------- | --------- |
+| src       | Image src                 | string                | ---       |
+| height    | image height              | string \| number      | ---       |
+| width     | image width               | string \| number      | 100       |
+| style     | style                     | CSSProperties         | {}        |
+| group     | group for `Preview`       | string \| number      | 'default' |
+| objectFit | image object-fit property | ObjectFitProperty     | 'cover'   |
+| preview   | enbale for `Preview`      | boolean               | true      |
+| imgProps  | props for `img`           | ImgHTMLAttributes     | ---       |
+| mask      | enable mask for `Image`   | boolean               | true      |
+| onClick   | onClick callback          | (src: string) => void | ---       |
+| onError   | onError callback          | (src: string) => void | ---       |
+| onLoad    | onLoad callback           | (src: string) => void | ---       |
+| onDelete  | onDelete callback         | (src: string) => void | ---       |
+| className | className for `Image`     | string                | ---       |
+| observer  | observer for lazyLoad     | IntersectionObserver  | ---       |
 
-## Preview
+```typescript
+type iImageProp = {
+  src: string
+  height?: string | number
+  width?: string | number
+  style?: CSSProperties
+  group?: string | number
+  objectFit?: ObjectFitProperty
+  preview?: boolean
+  imgProps?: ImgHTMLAttributes<any>
+  mask?: boolean
+  onClick?: Function
+  onError?: (src: string) => void
+  onLoad?: (src: string) => void
+  onDelete?: (src: string) => void
+  className?: string
+  observer?: IntersectionObserver
+}
+```
 
-<PropsTable of={Preview}/>
+## PreviewApi
 
-|    func    | desc |  params  |
-| ---------- | --- | ------ |
-| preview|  preview a image  | image:\[String\|Number\]: imageSrc or image index of list \n list:Array: Images List |
-| show |  open the previewer |  |
-| hide |  close the previewer |  |
-| destroy |  destroy the ins |  |
+| func    | desc                | params                                                                               |
+| ------- | ------------------- | ------------------------------------------------------------------------------------ |
+| preview | preview a image     | image:\[String\|Number\]: imageSrc or image index of list \n list:Array: Images List |
+| show    | open the previewer  |                                                                                      |
+| hide    | close the previewer |                                                                                      |
+| destroy | destroy the ins     |                                                                                      |
+
+```typescript
+type PreviewApi = {
+  destroy: () => void
+  preview: (current: number | string, list?: Array<string>): void
+  show: () => void
+  hide: () => void
+}
+```

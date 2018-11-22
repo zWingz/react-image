@@ -5,19 +5,16 @@ order: 1
 ---
 
 import { Playground, PropsTable } from 'docz'
-import { Image, PreviewApi } from '../src'
+import { Image, PreviewApi } from '../src'
 import src1 from './assets/logo.jpg'
 const Images = (function() {
   const ret = []
-  for(let i = 1; i <= 20; i++) {
-    ret.push(
-      require(`./assets/${i}.jpg`)
-    )
+  for (let i = 1; i <= 20; i++) {
+    ret.push(require(`./assets/${i}.jpg`))
   }
   window.Images = ret
   return ret
 })()
-
 
 # Usage
 
@@ -39,29 +36,33 @@ const Images = (function() {
 - Loadable by used `IntersectionObserver`
 
 #### Base
-
 <Playground>
-  <Image src={src1} width={120} height={120}/>
+  <Image src={src1} width={120} height={120} />
 </Playground>
 
 #### Multi Image
-
 <Playground>
-  <div style={{display: 'flex', flexWrap: 'wrap'}}>
-    {
-      Images.map(each => {
-        return <Image group='multi' key={each} src={each} width={120} height={120} style={{margin: '5px'}}/>
-      })
-    }
+  <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+    {Images.map(each => {
+      return (
+        <Image
+          group='multi'
+          key={each}
+          src={each}
+          width={120}
+          height={120}
+          style={{ margin: '5px' }}
+        />
+      )
+    })}
   </div>
 </Playground>
-
 
 #### Callback
 
 <Playground>
   {
-    (function() {
+    () => {
       const props = {
         group: 'callback',
         width: 120,
@@ -79,27 +80,32 @@ const Images = (function() {
           console.log('onDelete -> ', src)
         }
       }
-      return [
+      return <>
         <Image key={1} src={Images[0]} {...props}/>,
         <Image key={2} src={Images[1]} {...props}/>,
         <Image key={4} src='123.jpg' {...props}/>
-      ]
-    })()
+      </>
+    }
   }
 
 </Playground>
 
-
 ### Preview
 
 Preview image without use component `Image`
+
 <Playground>
-  {
-    (function() {
-      const img = Images.slice(0, 3)
-      return img.map(each => {
-        return <img src={each} key={each} style={{width: '200px', height: '200px', objectFit: 'cover'}}onClick={() => PreviewApi.preview(each, img)}/>
-      })
-    })()
-  }
+  {() => {
+    const img = Images.slice(0, 3)
+    return img.map(each => {
+      return (
+        <img
+          src={each}
+          key={each}
+          style={{ width: '200px', height: '200px', objectFit: 'cover' }}
+          onClick={() => PreviewApi.preview(each, img)}
+        />
+      )
+    })
+  }}
 </Playground>

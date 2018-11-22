@@ -18,11 +18,10 @@ export type iImageProp = {
   preview?: boolean;
   imgProps?: ImgHTMLAttributes<any>;
   mask?: boolean;
-  onClick?: Function;
+  onClick?: (src: string) => void;
   onError?: (src: string) => void;
   onLoad?: (src: string) => void;
   onDelete?: (src: string) => void;
-  alt?: string;
   className?: string;
   observer?: IntersectionObserver;
 }
