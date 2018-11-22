@@ -10,7 +10,8 @@ describe('test when IntersectionObserver is false', () => {
     expect(createObserver()).toBeNull()
   })
   it('observe and unobserve return undefined', () => {
-    expect(observe()).toBeUndefined()
-    expect(unobserve()).toBeUndefined()
+    const div = document.createElement('div')
+    expect(observe(div, () => {})).toBeUndefined()
+    expect(unobserve(div)).toBeUndefined()
   })
 })

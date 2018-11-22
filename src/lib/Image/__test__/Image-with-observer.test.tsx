@@ -1,9 +1,13 @@
-import React from 'react'
+import * as React from 'react'
 import ImageComponent from '..'
 import { shallow } from 'enzyme'
 
-function getComp(prop) {
-  return <ImageComponent src="test.png" {...prop} />
+function getComp(prop?) {
+  return <ImageComponent src='test.png' {...prop} />
+}
+
+declare const window: {
+  IntersectionObserver: any
 }
 
 describe('test when IntersectionObserver is true', () => {
@@ -26,7 +30,7 @@ describe('test when IntersectionObserver is true', () => {
     unobserveCallCounter = 0
   })
   it('observe img', () => {
-    const wrapper = shallow(getComp())
+    const wrapper = shallow<ImageComponent>(getComp())
     expect(observeCallCounter).toEqual(1)
     expect(wrapper.instance().state.loadObserve).toBeFalsy()
     expect(wrapper.find('img')).toHaveLength(0)
@@ -41,7 +45,7 @@ describe('test when IntersectionObserver is true', () => {
     expect(unobserveCallCounter).toEqual(1)
   })
   it('unobserve when unmount', () => {
-    const wrapper = shallow(getComp())
+    const wrapper = shallow<ImageComponent>(getComp())
     expect(observeCallCounter).toEqual(1)
     wrapper.instance().componentWillUnmount()
     expect(unobserveCallCounter).toEqual(1)

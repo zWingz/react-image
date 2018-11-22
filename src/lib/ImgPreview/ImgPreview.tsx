@@ -1,18 +1,52 @@
-import React from 'react'
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
+import { MouseEvent as ReactMouseEvent, CSSProperties, PureComponent } from 'react'
 // import { reaction } from 'mobx'
-import ReactDOM from 'react-dom'
 import LoadingIcon from '../LoadingIcon'
 import ErrorIcon from '../ErrorIcon'
 import Image from '../Image'
 import { createObserver } from '../Image/observer'
 import { setScrollbar, resetScrollbar } from '../../utils'
 // import Store from './imgViewStore'
-function find(list, arg) {
+export type PreviewState = {
+  x: number;
+  y: number;
+  left: number;
+  top: number;
+  scale: number;
+  rotate: number;
+  images: string[];
+  current: number;
+  open: boolean;
+  changed: boolean;
+  loaded: boolean;
+  error: boolean;
+}
+export interface PreviewInterface {
+  (current: number | string, list?: Array<string>): void
+}
+
+export interface PreviewInstanceInterface {
+  preview: PreviewInterface
+  show: () => void
+  hide: () => void
+  component: ImgPpreview
+  destroy: Function
+}
+export interface PreviewInstanceCallback {
+  (Instance: PreviewInstanceInterface): void
+}
+
+function find<T>(list: T[], arg: T): number {
   return list.findIndex(each => each === arg)
 }
-let observer = null
-export default class ImgPpreview extends React.PureComponent {
-  state = {
+let observer: IntersectionObserver = null
+export default class ImgPpreview extends PureComponent<{}, PreviewState> {
+  static newInstance: (callback: PreviewInstanceCallback) => void
+  $el: HTMLElement = null
+  $close: HTMLElement = null
+  $footer: HTMLElement = null
+  state: PreviewState = {
     // mouse position
     x: 0,
     y: 0,
@@ -43,18 +77,18 @@ export default class ImgPpreview extends React.PureComponent {
    * @param {Number|Object}} current
    * @param {Array} list 图片数组
    */
-  exportPreview = (current, list) => {
+  exportPreview: PreviewInterface = (current, list) => {
     let l = this.state.images
-    let c = current
-    if(list) {
+    let c: number | string = current
+    if (list) {
       l = list
     }
     // 如果为number型则直接设置
-    if(typeof c !== 'number') {
+    if (typeof c !== 'number') {
       // 否则调用find方法找下标
       // 如果不存在则设为images
-      const idx = find(l, c)
-      if(idx === -1) {
+      const idx = find<string>(l, c)
+      if (idx === -1) {
         l = [c]
         c = 0
       } else {
@@ -74,15 +108,15 @@ export default class ImgPpreview extends React.PureComponent {
    * @event
    * @memberof ImgPpreview
    */
-  windowKeyUpHandle = e => {
+  windowKeyUpHandle = (e: KeyboardEvent) => {
     e.stopPropagation()
     e.preventDefault()
     const { keyCode } = e
-    if(keyCode === 27) {
+    if (keyCode === 27) {
       this.hide()
-    } else if(keyCode === 37) {
+    } else if (keyCode === 37) {
       this.prev()
-    } else if(keyCode === 39) {
+    } else if (keyCode === 39) {
       this.next()
     }
   }
@@ -93,12 +127,12 @@ export default class ImgPpreview extends React.PureComponent {
    * @event
    * @memberof ImgPpreview
    */
-  hideHandle = e => {
+  hideHandle = (e: MouseEvent) => {
     const { target } = e
-    if(
-      target === this.$close
-      || target === this.$el
-      || target === this.$footer
+    if (
+      target === this.$close ||
+      target === this.$el ||
+      target === this.$footer
     ) {
       this.hide()
     }
@@ -141,7 +175,7 @@ export default class ImgPpreview extends React.PureComponent {
     this.removeEffect()
   }
 
-  change = current => {
+  change = (current: number) => {
     this.initImage()
     this.setState({
       current
@@ -191,7 +225,7 @@ export default class ImgPpreview extends React.PureComponent {
    * @param {number} arg 旋转的度数
    * @event
    */
-  rotateFnc = arg => {
+  rotateFnc = (arg: number) => {
     const { rotate } = this.state
     this.setState({
       rotate: rotate + arg
@@ -202,9 +236,9 @@ export default class ImgPpreview extends React.PureComponent {
    * 监听鼠标按下,触发绑定mousemove
    * @event
    */
-  mouseDownHandle = e => {
+  mouseDownHandle = (e: ReactMouseEvent<HTMLImageElement>) => {
     e.stopPropagation()
-    if(e.button !== 0) {
+    if (e.button !== 0) {
       return
     }
     const container = this.$el
@@ -220,7 +254,7 @@ export default class ImgPpreview extends React.PureComponent {
    * 鼠标移动事件, 拖曳图片
    * @event
    */
-  mouseMoveHandle = e => {
+  mouseMoveHandle = (e: MouseEvent) => {
     const x = e.clientX,
       y = e.clientY,
       offsetX = x - this.state.x,
@@ -247,13 +281,13 @@ export default class ImgPpreview extends React.PureComponent {
    * 滚轮事件,图片放大缩小
    * @event
    */
-  mouseWheelHandle = e => {
+  mouseWheelHandle = (e: React.WheelEvent<HTMLDivElement>) => {
     e.preventDefault()
     e.stopPropagation()
     // 放大缩小功能
     // const delta = e.wheelDelta ? e.wheelDelta : -(e.detail || 0)
     let { scale } = this.state
-    if(-e.deltaY < 0) {
+    if (-e.deltaY < 0) {
       // 放大
       scale *= 1.2
     } else {
@@ -272,11 +306,11 @@ export default class ImgPpreview extends React.PureComponent {
    * @memberof ImgPpreview
    */
   imgOnLoad = e => {
-    const img = e.target
+    const img = e.target as HTMLImageElement
     const width = img.naturalWidth
     let scale = 1
     const windwoWidth = (window.innerWidth * 3) / 4
-    if(width > windwoWidth) {
+    if (width > windwoWidth) {
       scale = windwoWidth / width
     }
     this.setState(
@@ -301,7 +335,7 @@ export default class ImgPpreview extends React.PureComponent {
     })
   }
 
-  get scaleFixed() {
+  get scaleFixed(): number {
     return +this.state.scale.toFixed(2)
   }
 
@@ -312,7 +346,7 @@ export default class ImgPpreview extends React.PureComponent {
    * @readonly
    * @memberof ImgPpreview
    */
-  get imgSty() {
+  get imgSty(): CSSProperties {
     const { rotate, top, left } = this.state
     const { scaleFixed } = this
     return {
@@ -328,12 +362,12 @@ export default class ImgPpreview extends React.PureComponent {
    *
    * @readonly
    */
-  get currentImg() {
+  get currentImg(): string {
     const { current, images } = this.state
     return images[current]
   }
 
-  get imgListStyle() {
+  get imgListStyle(): CSSProperties {
     return {
       display: 'flex',
       transform: `translate3d(-${this.state.current * 50}px, 0, 0)`,
@@ -342,7 +376,7 @@ export default class ImgPpreview extends React.PureComponent {
   }
 
   componentDidMount() {
-    if(!observer) {
+    if (!observer) {
       observer = createObserver(document.querySelector('.img-viewer-list'))
     }
   }
@@ -351,19 +385,19 @@ export default class ImgPpreview extends React.PureComponent {
     return (
       <>
         <div
-          className="img-viewer-close"
+          className='img-viewer-close'
           ref={el => {
             this.$close = el
           }}
         >
-          <i className="react-image-icon" style={{ pointerEvents: 'none' }}>
+          <i className='react-image-icon' style={{ pointerEvents: 'none' }}>
             &#xe904;
           </i>
         </div>
-        <i className="img-viewer-prev react-image-icon" onClick={this.prev}>
+        <i className='img-viewer-prev react-image-icon' onClick={this.prev}>
           &#xe914;
         </i>
-        <i className="img-viewer-next react-image-icon" onClick={this.next}>
+        <i className='img-viewer-next react-image-icon' onClick={this.next}>
           &#xe914;
         </i>
       </>
@@ -390,17 +424,17 @@ export default class ImgPpreview extends React.PureComponent {
           onLoad={imgOnLoad}
           onError={imgOnError}
           src={state.changed ? currentImg : ''}
-          alt=""
+          alt=''
           draggable={false}
           style={imgSty}
         />
         {!state.loaded && (
-          <div className="img-viewer-status">
+          <div className='img-viewer-status'>
             <LoadingIcon />
           </div>
         )}
         {state.error && (
-          <div className="img-viewer-status">
+          <div className='img-viewer-status'>
             <ErrorIcon style={{ width: '300px', height: '300px' }} />
           </div>
         )}
@@ -409,42 +443,43 @@ export default class ImgPpreview extends React.PureComponent {
   }
 
   _renderFooter() {
-    const {
-      state, prev, next, rotateFnc
-    } = this
+    const { state, prev, next, rotateFnc } = this
     const { images, current } = state
     return (
       <>
         <div
-          className="img-viewer-footer"
+          className='img-viewer-footer'
           ref={ref => {
             this.$footer = ref
           }}
         >
-          <div className="img-viewer-ctrl">
+          <div className='img-viewer-ctrl'>
             <i
-              className="react-image-icon"
+              className='react-image-icon'
               onClick={prev}
               style={{ transform: 'rotateY(180deg)' }}
             >
               &#xe914;
             </i>
-            <i className="react-image-icon img-viewer-rotate" onClick={() => rotateFnc(90)}>
+            <i
+              className='react-image-icon img-viewer-rotate'
+              onClick={() => rotateFnc(90)}
+            >
               &#xe91a;
             </i>
             <i
-              className="react-image-icon img-viewer-rotate"
+              className='react-image-icon img-viewer-rotate'
               onClick={() => rotateFnc(-90)}
               style={{ transform: 'rotateY(180deg)' }}
             >
               &#xe91a;
             </i>
-            <i className="react-image-icon" onClick={next}>
+            <i className='react-image-icon' onClick={next}>
               &#xe914;
             </i>
           </div>
-          <div className="img-viewer-list">
-            <div className="img-viewer-list-inner">
+          <div className='img-viewer-list'>
+            <div className='img-viewer-list-inner'>
               <div style={this.imgListStyle}>
                 {images.map((src, idx) => (
                   <div
@@ -457,8 +492,8 @@ export default class ImgPpreview extends React.PureComponent {
                   >
                     <Image
                       observer={observer}
-                      width="50"
-                      height="50"
+                      width='50'
+                      height='50'
                       preview={false}
                       mask={false}
                       src={src}
@@ -477,15 +512,15 @@ export default class ImgPpreview extends React.PureComponent {
     const { state, mouseUpHandle, mouseWheelHandle } = this
     return (
       <div
-        id="imgPreview"
+        id='imgPreview'
         ref={el => {
           this.$el = el
         }}
-        className="img-viewer-container"
+        className='img-viewer-container'
         style={{ display: state.open ? 'flex' : 'none' }}
         onMouseUp={mouseUpHandle}
         onWheel={mouseWheelHandle}
-        draggable="false"
+        draggable={false}
       >
         {this._renderIcon()}
 
@@ -499,7 +534,7 @@ export default class ImgPpreview extends React.PureComponent {
 
 ImgPpreview.newInstance = function newPreviewInstance(callback) {
   const div = document.createElement('div')
-  function ref(ins) {
+  function ref(ins: ImgPpreview) {
     callback({
       preview(current, list) {
         ins.exportPreview(current, list)

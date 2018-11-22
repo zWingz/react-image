@@ -1,6 +1,7 @@
-import React from 'react'
+import * as React from 'react'
 import SVG from '../../assets/img-load-error.svg'
-const style = {
+
+const style: React.CSSProperties = {
   border: '1px dashed #dadada',
   backgroundImage: `url(${SVG})`,
   backgroundRepeat: 'no-repeat',
@@ -16,7 +17,6 @@ export default function(props) {
         ...style,
         ...props.style
       }}
-    >
-    </div>
+    />
   )
 }

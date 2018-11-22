@@ -1,7 +1,7 @@
-import {
-  CanUseIntersecion, createObserver, observe
-} from '../observer'
-
+import { CanUseIntersecion, createObserver, observe } from '../observer'
+declare const window: {
+  IntersectionObserver: any;
+}
 describe('test when IntersectionObserver is false', () => {
   const observeFn = jest.fn()
   const unobserveFn = jest.fn()
@@ -26,14 +26,10 @@ describe('test when IntersectionObserver is false', () => {
     const dom = document.body
     observe(dom, observeCb)
     const observerCallback = window.IntersectionObserver.mock.calls[0][0]
-    observerCallback([
-      { target: dom, intersectionRatio: 100 }
-    ])
+    observerCallback([{ target: dom, intersectionRatio: 100 }])
     expect(observeCb).toBeCalledTimes(1)
     expect(unobserveFn).toBeCalledTimes(1)
-    observerCallback([
-      { target: dom, intersectionRatio: 100 }
-    ])
+    observerCallback([{ target: dom, intersectionRatio: 100 }])
     expect(observeCb).toBeCalledTimes(1)
     expect(unobserveFn).toBeCalledTimes(1)
   })

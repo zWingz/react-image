@@ -1,0 +1,97 @@
+{
+  "extends": ["tslint-react", "tslint-eslint-rules", "tslint-config-prettier"],
+  "rules": {
+    "class-name": true,
+    "eofline": true,
+    "forin": true,
+    "jsdoc-format": false,
+    "label-position": true,
+    "member-ordering": [
+      true,
+      {
+        "order": [
+          "private-static-field",
+          "private-instance-field",
+          "private-constructor",
+          "private-instance-method",
+          "protected-instance-method",
+          "public-static-field",
+          "public-instance-field",
+          "public-constructor",
+          "public-instance-method"
+        ]
+      }
+    ],
+    "quotemark": [true, "single"],
+    // "strict-bound-class-methods": true,
+    "new-parens": true,
+    "no-any": false,
+    "no-arg": true,
+    "no-bitwise": true,
+    "no-conditional-assignment": true,
+    "no-consecutive-blank-lines": true,
+    "no-console": [true, "debug", "info", "log", "time", "timeEnd", "trace"],
+    "no-construct": true,
+    "no-constructor-vars": false,
+    "no-debugger": true,
+    "no-duplicate-variable": true,
+    "no-empty": false,
+    "no-eval": true,
+    "no-internal-module": true,
+    "no-namespace": true,
+    "no-reference": true,
+    "no-shadowed-variable": true,
+    "no-string-literal": true,
+    "no-switch-case-fall-through": false,
+    "no-trailing-whitespace": true,
+    "no-use-before-declare": false,
+    "no-var-keyword": true,
+    "no-var-requires": false,
+    "object-literal-sort-keys": false,
+    "one-variable-per-declaration": false,
+    "radix": true,
+    "switch-default": true,
+    "trailing-comma": [
+      true,
+      {
+        "singleline": "never",
+        "multiline": "never",
+        "esSpecCompliant": true
+      }
+    ],
+    "triple-equals": [true, "allow-null-check"],
+    "typedef": false,
+    "typedef-whitespace": [
+      true,
+      {
+        "call-signature": "nospace",
+        "index-signature": "nospace",
+        "parameter": "nospace",
+        "property-declaration": "nospace",
+        "variable-declaration": "nospace"
+      },
+      {
+        "call-signature": "onespace",
+        "index-signature": "onespace",
+        "parameter": "onespace",
+        "property-declaration": "onespace",
+        "variable-declaration": "onespace"
+      }
+    ],
+    "use-isnan": true,
+    "variable-name": [
+      true,
+      "allow-leading-underscore",
+      "ban-keywords",
+      "check-format",
+      "allow-pascal-case"
+    ],
+    "jsx-no-lambda": false,
+    "jsx-no-string-ref": false,
+    "jsx-boolean-value": [true, "never"],
+    "jsx-no-multiline-js": false,
+    "no-implicit-dependencies": false,
+    "no-unused-expression": false,
+    "semicolon": [true, "never"]
+  }
+}

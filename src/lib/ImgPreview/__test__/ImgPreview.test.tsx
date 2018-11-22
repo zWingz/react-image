@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import ImgPreview, { PreviewApi } from '..'
 import { shallow, mount } from 'enzyme'
 import LoadingIcon from '../../LoadingIcon'
@@ -10,7 +10,7 @@ function getComp() {
 }
 const imgCurrent = '.img-viewer-current'
 describe('test preview initial state', () => {
-  const wrapper = shallow(getComp())
+  const wrapper = shallow<ImgPreview>(getComp())
   it('initial state', () => {
     const ins = wrapper.instance()
     expect(ins.state.images).toHaveLength(0)
@@ -28,7 +28,7 @@ describe('test preview initial state', () => {
   })
 })
 describe('test preview img with not load', () => {
-  const wrapper = shallow(getComp())
+  const wrapper = shallow<ImgPreview>(getComp())
   const ins = wrapper.instance()
   const src = '1.jpg'
   ins.exportPreview(src)
@@ -47,13 +47,13 @@ describe('test preview img with not load', () => {
     const img = wrapper
       .find(Image)
       .dive()
-      .instance()
+      .instance() as Image
     expect(img.props.src).toEqual(src)
   })
 })
 describe('test preview image with onload', () => {
-  const wrapper = shallow(getComp())
-  const ins = wrapper.instance()
+  const wrapper = shallow<ImgPreview>(getComp())
+  const ins = wrapper.instance() as ImgPreview
   const spy = jest.spyOn(ins, 'imgOnLoad')
   const src = 'src.jpg'
   ins.exportPreview(src)
@@ -82,7 +82,7 @@ describe('test preview image with onload', () => {
 })
 
 describe('test preview img on error', () => {
-  const wrapper = shallow(getComp())
+  const wrapper = shallow<ImgPreview>(getComp())
   const ins = wrapper.instance()
   ins.exportPreview('src')
   it('trigger onError', () => {
@@ -104,7 +104,7 @@ describe('test preview img in imglist', () => {
   const src3 = '3.jpg'
   const src4 = '4.jpg'
   const list = [src1, src2, src3, src4]
-  const wrapper = shallow(getComp())
+  const wrapper = shallow<ImgPreview>(getComp())
   const ins = wrapper.instance()
   it('preview with a src', () => {
     ins.exportPreview(src3, list)
@@ -132,7 +132,7 @@ describe('test preview img in imglist', () => {
 })
 
 describe('test img transform', () => {
-  const wrapper = mount(getComp())
+  const wrapper = mount<ImgPreview>(getComp())
   const ins = wrapper.instance()
   ins.exportPreview('1.src')
   wrapper.find(imgCurrent).simulate('load', { target: { naturalWidth: 1024 } })
@@ -191,7 +191,7 @@ describe('test img transform', () => {
       ins.forceUpdate()
       expect(ins.state.x).toEqual(100)
       expect(ins.state.y).toEqual(100)
-      expect(container.getDOMNode().style.cursor).toEqual('move')
+      expect((container.getDOMNode() as HTMLDivElement).style.cursor).toEqual('move')
     })
     it('test mouseMove', () => {
       const endX = 500
@@ -210,7 +210,7 @@ describe('test img transform', () => {
     })
     it('test mouseUp', () => {
       container.simulate('mouseup')
-      expect(container.getDOMNode().style.cursor).toEqual('initial')
+      expect((container.getDOMNode() as HTMLDivElement).style.cursor).toEqual('initial')
     })
     it('it should remove mouseMove listener after mouseUp', () => {
       const mouseMoveEvent = new MouseEvent('mousemove', {
@@ -235,7 +235,7 @@ describe('test img transform', () => {
 })
 
 describe('test change index', () => {
-  const wrapper = shallow(getComp())
+  const wrapper = shallow<ImgPreview>(getComp())
   const ins = wrapper.instance()
   const src = ['1.jpg', '2.jpg', '3.jpg', '4.jpg']
   ins.exportPreview('1.jpg', src)
@@ -257,7 +257,7 @@ describe('test change index', () => {
   it('test keyup code 39 is next', () => {
     const event = new KeyboardEvent('keyup', {
       keyCode: 39
-    })
+    } as KeyboardEventInit)
     window.dispatchEvent(event)
     expect(ins.state.current).toEqual(1)
     expect(wrapper.find(imgCurrent).prop('src')).toEqual(src[1])
@@ -265,7 +265,7 @@ describe('test change index', () => {
   it('test keyup code 37 is prev', () => {
     const event = new KeyboardEvent('keyup', {
       keyCode: 37
-    })
+    } as KeyboardEventInit)
     window.dispatchEvent(event)
     expect(ins.state.current).toEqual(0)
     expect(wrapper.find(imgCurrent).prop('src')).toEqual(src[0])
@@ -273,14 +273,17 @@ describe('test change index', () => {
   it('test chang in preview list', () => {
     const result = 2
     expect(wrapper.find('.img-viewer-list-item')).toHaveLength(4)
-    wrapper.find('.img-viewer-list-item').at(result).simulate('click')
+    wrapper
+      .find('.img-viewer-list-item')
+      .at(result)
+      .simulate('click')
     expect(ins.state.current).toEqual(result)
     expect(wrapper.find(imgCurrent).prop('src')).toEqual(src[result])
   })
 })
 
 describe('test show/hide', () => {
-  const wrapper = mount(getComp())
+  const wrapper = mount<ImgPreview>(getComp())
   const ins = wrapper.instance()
   it('test show', () => {
     wrapper.setState({
@@ -318,7 +321,7 @@ describe('test show/hide', () => {
     const hide = jest.spyOn(ins, 'hide')
     const event = new KeyboardEvent('keyup', {
       keyCode: 27
-    })
+    } as KeyboardEventInit)
     window.dispatchEvent(event)
     expect(hide).toBeCalledTimes(1)
     const bodyHideHandle = jest.spyOn(ins, 'hideHandle')
@@ -391,6 +394,7 @@ describe('test api', () => {
         show() {
           show()
         },
+        component: {} as ImgPreview,
         hide() {
           hide()
         },

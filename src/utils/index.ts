@@ -1,18 +1,18 @@
 const { documentElement } = document
-let scrollBarWidth = 0
+let scrollBarWidth: number = 0
 
-export function getScrollbarSize() {
+export function getScrollbarSize(): number {
   if(scrollBarWidth) {
     return scrollBarWidth
   }
   scrollBarWidth = window.innerWidth - documentElement.clientWidth
   return scrollBarWidth
 }
-export function getDomStyle(dom, name) {
+export function getDomStyle(dom: HTMLElement, name: string) {
   return window.getComputedStyle(dom)[name]
 }
 
-function getBodyOriginPaddingRight() {
+function getBodyOriginPaddingRight(): number {
   return parseInt(getDomStyle(document.body, 'paddingRight'), 10)
 }
 
