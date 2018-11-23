@@ -31,7 +31,7 @@ export interface PreviewInstanceInterface {
   show: () => void
   hide: () => void
   component: ImgPpreview
-  destroy: Function
+  destroy: () => void
 }
 export interface PreviewInstanceCallback {
   (Instance: PreviewInstanceInterface): void

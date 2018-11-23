@@ -3,7 +3,8 @@
   "version": "1.0.1",
   "description": "react image component",
   "main": "dist/index.js",
-  "module": "es/index.js",
+  "module": "dist/index.esm.js",
+  "types": "./index.d.ts",
   "keywords": [
     "react",
     "image",
@@ -12,7 +13,8 @@
   "files": [
     "dist",
     "es",
-    "src"
+    "src",
+    "index.d.ts"
   ],
   "scripts": {
     "docz": "docz dev",
