@@ -6,6 +6,7 @@ const style: React.CSSProperties = {
   backgroundImage: `url(${SVG})`,
   backgroundRepeat: 'no-repeat',
   backgroundSize: '65% 65%',
+  boxSizing: 'border-box',
   width: '100%',
   height: '100%',
   backgroundPosition: 'center'

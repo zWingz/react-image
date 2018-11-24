@@ -23,7 +23,7 @@
     "tslint": "tslint --fix --format codeFrame --project .",
     "dev": "webpack-serve --host 0.0.0.0 --port 2222",
     "pub": "npm run tslint && npm run build && npm publish --registry http://registry.npmjs.org --access=public",
-    "test": "cross-env NODE_ENV=test jest"
+    "test": "jest"
   },
   "author": "zhengzwing@gmail.com",
   "license": "MIT",
@@ -55,9 +55,9 @@
     "cross-env": "^5.2.0",
     "css-loader": "^1.0.0",
     "cz-conventional-changelog": "^2.1.0",
-    "docz": "0.11.2",
+    "docz": "^0.12.13",
     "docz-plugin-css": "0.11.0",
-    "docz-theme-default": "0.11.2",
+    "docz-theme-default": "^0.12.13",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.6.0",
     "eslint": "^5.5.0",
