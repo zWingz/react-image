@@ -109,8 +109,8 @@ export default class ImgPpreview extends PureComponent<{}, PreviewState> {
    * @memberof ImgPpreview
    */
   windowKeyUpHandle = (e: KeyboardEvent) => {
-    e.stopPropagation()
-    e.preventDefault()
+    // e.stopPropagation()
+    // e.preventDefault()
     const { keyCode } = e
     if (keyCode === 27) {
       this.hide()
@@ -127,7 +127,7 @@ export default class ImgPpreview extends PureComponent<{}, PreviewState> {
    * @event
    * @memberof ImgPpreview
    */
-  hideHandle = (e: MouseEvent) => {
+  hideHandle = (e: React.MouseEvent) => {
     const { target } = e
     if (
       target === this.$close ||
@@ -140,15 +140,15 @@ export default class ImgPpreview extends PureComponent<{}, PreviewState> {
 
   addEffect() {
     setScrollbar()
-    window.addEventListener('keyup', this.windowKeyUpHandle)
-    document.body.addEventListener('click', this.hideHandle)
+    document.addEventListener('keyup', this.windowKeyUpHandle)
+    // document.body.addEventListener('click', this.hideHandle)
     document.body.style.overflow = 'hidden'
   }
 
   removeEffect() {
     resetScrollbar()
-    window.removeEventListener('keyup', this.windowKeyUpHandle)
-    document.body.removeEventListener('click', this.hideHandle)
+    document.removeEventListener('keyup', this.windowKeyUpHandle)
+    // document.body.removeEventListener('click', this.hideHandle)
     document.body.style.overflow = ''
   }
 
@@ -516,6 +516,7 @@ export default class ImgPpreview extends PureComponent<{}, PreviewState> {
         ref={el => {
           this.$el = el
         }}
+        onClick={this.hideHandle}
         className='img-viewer-container'
         style={{ display: state.open ? 'flex' : 'none' }}
         onMouseUp={mouseUpHandle}
