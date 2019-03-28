@@ -14,10 +14,6 @@ function getInstance(callback: PreviewInstanceCallback) {
     return
   }
   Preview.newInstance((instance: PreviewInstanceInterface) => {
-    if(ins) {
-      callback(ins)
-      return
-    }
     ins = instance
     callback(instance)
   })
@@ -37,7 +33,7 @@ function exec(fun: string) {
   }
 }
 
-export const Api: {destroy: () => void, preview: PreviewInterface, show: () => void, hide: () => void} = {
+const Api: {destroy: () => void, preview: PreviewInterface, show: () => void, hide: () => void} = {
   preview: null,
   show: null,
   hide: null,

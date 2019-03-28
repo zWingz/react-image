@@ -37,7 +37,7 @@
 }
 .img-viewer-current {
   position: relative;
-  transition: transform .3s ease-in-out;
+  // transition: transform .1s linear;
   animation: preview-ani 0.3s ease-in-out;
 }
 @keyframes preview-ani {

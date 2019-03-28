@@ -141,19 +141,13 @@ describe('test img transform', () => {
   wrapper.update()
   describe('test scale', () => {
     let expectScale = 0.75
-    const preventDefault = jest.fn()
-    const stopPropagation = jest.fn()
     it('test scale down', () => {
       // setTimeout(() => {
       expect(ins.state.scale).toEqual(expectScale)
       container.simulate('wheel', {
-        deltaY: -10,
-        preventDefault,
-        stopPropagation
+        deltaY: -10
       })
-      expect(preventDefault).toBeCalledTimes(1)
-      expect(stopPropagation).toBeCalledTimes(1)
-      expectScale *= 0.8
+      expectScale *= 0.9
       expect(ins.state.scale).toEqual(expectScale)
       // done()
       // }, 50)
@@ -161,11 +155,9 @@ describe('test img transform', () => {
     it('test scale up', () => {
       // setTimeout(() => {
       container.simulate('wheel', {
-        deltaY: 10,
-        preventDefault,
-        stopPropagation
+        deltaY: 10
       })
-      expectScale *= 1.2
+      expectScale *= 1.1
       expect(ins.state.scale).toEqual(expectScale)
       // done()
       // }, 50)
@@ -258,7 +250,7 @@ describe('test change index', () => {
     const event = new KeyboardEvent('keyup', {
       keyCode: 39
     } as KeyboardEventInit)
-    window.dispatchEvent(event)
+    window.document.dispatchEvent(event)
     expect(ins.state.current).toEqual(1)
     expect(wrapper.find(imgCurrent).prop('src')).toEqual(src[1])
   })
@@ -266,7 +258,7 @@ describe('test change index', () => {
     const event = new KeyboardEvent('keyup', {
       keyCode: 37
     } as KeyboardEventInit)
-    window.dispatchEvent(event)
+    window.document.dispatchEvent(event)
     expect(ins.state.current).toEqual(0)
     expect(wrapper.find(imgCurrent).prop('src')).toEqual(src[0])
   })
@@ -322,14 +314,11 @@ describe('test show/hide', () => {
     const event = new KeyboardEvent('keyup', {
       keyCode: 27
     } as KeyboardEventInit)
-    window.dispatchEvent(event)
+    window.document.dispatchEvent(event)
     expect(hide).toBeCalledTimes(1)
     const bodyHideHandle = jest.spyOn(ins, 'hideHandle')
     ins.show()
-    const bodyClickEvent = new MouseEvent('click', {
-      bubbles: true
-    })
-    document.body.dispatchEvent(bodyClickEvent)
+    wrapper.simulate('click')
     expect(bodyHideHandle).toBeCalledTimes(1)
   })
 })

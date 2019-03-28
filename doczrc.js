@@ -8,7 +8,12 @@ export default {
   typescript: true,
   protocol: process.env.NODE_ENV === 'production' ? 'https' : 'http',
   themeConfig: {
-    mode: 'light'
+    mode: 'light',
+    styles: {
+      sidebar: `
+        z-index: 998;
+      `
+    }
   },
   codeSandbox: false,
   hashRouter: true,

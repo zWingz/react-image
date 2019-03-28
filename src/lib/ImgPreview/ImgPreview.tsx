@@ -30,7 +30,7 @@ export interface PreviewInstanceInterface {
   preview: PreviewInterface
   show: () => void
   hide: () => void
-  component: ImgPpreview
+  component: ImgPreview
   destroy: () => void
 }
 export interface PreviewInstanceCallback {
@@ -41,7 +41,7 @@ function find<T>(list: T[], arg: T): number {
   return list.findIndex(each => each === arg)
 }
 let observer: IntersectionObserver = null
-export default class ImgPpreview extends PureComponent<{}, PreviewState> {
+export default class ImgPreview extends PureComponent<{}, PreviewState> {
   static newInstance: (callback: PreviewInstanceCallback) => void
   $el: HTMLElement = null
   $close: HTMLElement = null
@@ -106,7 +106,7 @@ export default class ImgPpreview extends PureComponent<{}, PreviewState> {
    * window的按钮监听
    * 监听Esc按钮, 触发隐藏
    * @event
-   * @memberof ImgPpreview
+   * @memberof ImgPreview
    */
   windowKeyUpHandle = (e: KeyboardEvent) => {
     // e.stopPropagation()
@@ -125,7 +125,7 @@ export default class ImgPpreview extends PureComponent<{}, PreviewState> {
    * 隐藏图片浏览器
    * 只有在点击关闭按钮或者浏览器外的地方才触发
    * @event
-   * @memberof ImgPpreview
+   * @memberof ImgPreview
    */
   hideHandle = (e: React.MouseEvent) => {
     const { target } = e
@@ -200,7 +200,7 @@ export default class ImgPpreview extends PureComponent<{}, PreviewState> {
   /**
    * 初始化图片的position以及transform属性
    *
-   * @memberof ImgPpreview
+   * @memberof ImgPreview
    */
   initImage() {
     this.setState(
@@ -282,17 +282,15 @@ export default class ImgPpreview extends PureComponent<{}, PreviewState> {
    * @event
    */
   mouseWheelHandle = (e: React.WheelEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    e.stopPropagation()
     // 放大缩小功能
     // const delta = e.wheelDelta ? e.wheelDelta : -(e.detail || 0)
     let { scale } = this.state
     if (-e.deltaY < 0) {
       // 放大
-      scale *= 1.2
+      scale *= 1.1
     } else {
       // 缩小
-      scale *= 0.8
+      scale *= 0.9
     }
     this.setState({
       scale
@@ -303,7 +301,7 @@ export default class ImgPpreview extends PureComponent<{}, PreviewState> {
    * 监听图片的onLoad事件
    * 设置初始的宽高
    *
-   * @memberof ImgPpreview
+   * @memberof ImgPreview
    */
   imgOnLoad = e => {
     const img = e.target as HTMLImageElement
@@ -344,7 +342,7 @@ export default class ImgPpreview extends PureComponent<{}, PreviewState> {
    * 设置宽高和左边
    *
    * @readonly
-   * @memberof ImgPpreview
+   * @memberof ImgPreview
    */
   get imgSty(): CSSProperties {
     const { rotate, top, left } = this.state
@@ -533,9 +531,9 @@ export default class ImgPpreview extends PureComponent<{}, PreviewState> {
   }
 }
 
-ImgPpreview.newInstance = function newPreviewInstance(callback) {
+ImgPreview.newInstance = function newPreviewInstance(callback) {
   const div = document.createElement('div')
-  function ref(ins: ImgPpreview) {
+  function ref(ins: ImgPreview) {
     callback({
       preview(current, list) {
         ins.exportPreview(current, list)
@@ -554,5 +552,5 @@ ImgPpreview.newInstance = function newPreviewInstance(callback) {
     })
   }
   document.body.appendChild(div)
-  ReactDOM.render(<ImgPpreview ref={ref} />, div)
+  ReactDOM.render(<ImgPreview ref={ref} />, div)
 }
