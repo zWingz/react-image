@@ -1,6 +1,6 @@
 {
   "name": "@zzwing/react-image",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "react image component",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -22,7 +22,7 @@
     "build": "rollup -c",
     "tslint": "tslint --fix --format codeFrame --project .",
     "dev": "poi --serve",
-    "pub": "npm run tslint && npm run build && npm publish --access=public",
+    "pub": "yarn tslint && yarn build && yarn publish --access=public",
     "test": "jest"
   },
   "author": "zhengzwing@gmail.com",
@@ -42,7 +42,6 @@
   },
   "devDependencies": {
     "@poi/plugin-typescript": "^12.0.1",
-    "poi": "^12.5.5",
     "@types/enzyme": "^3.1.15",
     "@types/enzyme-adapter-react-16": "^1.0.3",
     "@types/jest": "^24.0.9",
@@ -58,6 +57,7 @@
     "husky-tslint-pre-commit": "^1.0.3",
     "jest": "^24.1.0",
     "node-sass": "^4.9.2",
+    "poi": "^12.5.5",
     "postcss-url": "^8.0.0",
     "react": "^16.5.0",
     "react-dom": "^16.5.0",
