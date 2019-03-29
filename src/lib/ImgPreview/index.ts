@@ -1,7 +1,7 @@
-import Preview, { PreviewInstanceInterface, PreviewInstanceCallback, PreviewInterface } from './ImgPreview'
+import Preview, { PreviewInstance, PreviewInstanceCallback, PreviewInterface } from './ImgPreview'
 import './style.scss'
 
-let ins: PreviewInstanceInterface = null
+let ins: PreviewInstance = null
 
 /**
  * 获取ImgPreview实例
@@ -13,7 +13,7 @@ function getInstance(callback: PreviewInstanceCallback) {
     callback(ins)
     return
   }
-  Preview.newInstance((instance: PreviewInstanceInterface) => {
+  Preview.newInstance((instance: PreviewInstance) => {
     ins = instance
     callback(instance)
   })
