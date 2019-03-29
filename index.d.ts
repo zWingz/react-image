@@ -23,7 +23,7 @@ declare module '@zzwing/react-image' {
   export interface PreviewInterface {
     (current: number | string, list?: Array<string>): void
   }
-  export interface PreviewInstanceInterface {
+  export interface PreviewInstance {
     preview: PreviewInterface
     show: () => void
     hide: () => void
@@ -31,7 +31,7 @@ declare module '@zzwing/react-image' {
     destroy: () => void
   }
   export interface PreviewInstanceCallback {
-    (Instance: PreviewInstanceInterface): void
+    (Instance: PreviewInstance): void
   }
   export default class ImgPpreview extends PureComponent {
     static newInstance: (callback: PreviewInstanceCallback) => void

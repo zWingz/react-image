@@ -6,7 +6,7 @@
  */
 let canUse = null
 export const CanUseIntersecion: () => boolean = function() {
-  if(canUse !== null) {
+  if (canUse !== null) {
     return canUse
   }
   canUse = 'IntersectionObserver' in window
@@ -14,16 +14,16 @@ export const CanUseIntersecion: () => boolean = function() {
 }
 // const targets = []
 const targets = new Map<
-Element,
-{ cb: Function; observer: IntersectionObserver }
+  Element,
+  { cb: Function; observer: IntersectionObserver }
 >()
 /* eslint-disable */
 export function createObserver(container?: HTMLElement) {
-  if(!CanUseIntersecion()) {
+  if (!CanUseIntersecion()) {
     return null
   }
   const opt: IntersectionObserverInit = {}
-  if(container) {
+  if (container) {
     opt.root = container
   }
   return new IntersectionObserver(excute, opt)
@@ -32,10 +32,10 @@ export function createObserver(container?: HTMLElement) {
 let ins = null
 
 function getObserve(observer: IntersectionObserver) {
-  if(observer) {
+  if (observer) {
     return observer
   }
-  if(!ins) {
+  if (!ins) {
     ins = createObserver()
   }
   return ins
@@ -44,7 +44,7 @@ function getObserve(observer: IntersectionObserver) {
 /* eslint-enable */
 
 export function observe(element: Element, cb, obs?: IntersectionObserver) {
-  if(!CanUseIntersecion()) {
+  if (!CanUseIntersecion()) {
     return
   }
   const observer = getObserve(obs)
@@ -56,7 +56,7 @@ export function observe(element: Element, cb, obs?: IntersectionObserver) {
 }
 
 export function unobserve(element: Element, obs?: IntersectionObserver) {
-  if(!CanUseIntersecion()) {
+  if (!CanUseIntersecion()) {
     return
   }
   const observer = getObserve(obs)
@@ -67,9 +67,9 @@ export function unobserve(element: Element, obs?: IntersectionObserver) {
 function excute(entries: IntersectionObserverEntry[]) {
   entries.forEach(each => {
     const { target, intersectionRatio, isIntersecting } = each
-    if(intersectionRatio > 0 || isIntersecting) {
+    if (intersectionRatio > 0 || isIntersecting) {
       const tar = targets.get(target)
-      if(tar) {
+      if (tar) {
         tar.cb(each)
         unobserve(target, tar.observer)
       }

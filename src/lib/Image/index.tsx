@@ -1,5 +1,4 @@
 import * as React from 'react'
-import * as PropTypes from 'prop-types'
 import { RefObject, createRef, ImgHTMLAttributes, CSSProperties, PureComponent } from 'react'
 import './style.scss'
 import LoadingIcon from '../LoadingIcon'
@@ -50,36 +49,6 @@ export default class ReactImage extends PureComponent<iImageProp> {
       display: isLoading || isError ? 'none' : ''
     })
     return ret
-  }
-  static propTypes = {
-    /** Component Style */
-    style: PropTypes.object,
-    /** Component className */
-    className: PropTypes.any,
-    /** Number or String, default 100 */
-    width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    /** Number or String, efult initial */
-    height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    /** Number or String, Image group id, used by ImagePreview */
-    group: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    /** Image src */
-    src: PropTypes.string,
-    /** Image style of object-fit, default cover */
-    objectFit: PropTypes.string,
-    /** Image other props, like: alt/className/style */
-    imgProps: PropTypes.object,
-    /** Can it be previewed  */
-    preview: PropTypes.bool,
-    /** show mask when hover */
-    mask: PropTypes.bool,
-    /** onDelete callback, param: src, it will display an icon on right corner when hover */
-    onDelete: PropTypes.func,
-    /** Image onError callback, param: src */
-    onError: PropTypes.func,
-    /** Image onLoad callback, param: src */
-    onLoad: PropTypes.func,
-    /** Image onClick onClick, param: src */
-    onClick: PropTypes.func
   }
 
   static defaultProps = {

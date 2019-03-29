@@ -26,7 +26,7 @@ export interface PreviewInterface {
   (current: number | string, list?: Array<string>): void
 }
 
-export interface PreviewInstanceInterface {
+export interface PreviewInstance {
   preview: PreviewInterface
   show: () => void
   hide: () => void
@@ -34,7 +34,7 @@ export interface PreviewInstanceInterface {
   destroy: () => void
 }
 export interface PreviewInstanceCallback {
-  (Instance: PreviewInstanceInterface): void
+  (Instance: PreviewInstance): void
 }
 
 function find<T>(list: T[], arg: T): number {
