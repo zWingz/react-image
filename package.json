@@ -93,7 +93,8 @@
     ],
     "collectCoverageFrom": [
       "src/**/*.{ts,tsx}",
-      "!src/**/__test__/**"
+      "!src/**/__test__/**",
+      "!src/**/module.d.ts"
     ],
     "coverageDirectory": "./coverage/",
     "collectCoverage": true,

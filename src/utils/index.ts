@@ -13,7 +13,7 @@ export function getDomStyle(dom: HTMLElement, name: string) {
 }
 
 function getBodyOriginPaddingRight(): number {
-  return +getDomStyle(document.body, 'paddingRight')
+  return parseInt(getDomStyle(document.body, 'paddingRight'), 10)
 }
 
 export function setScrollbar() {
