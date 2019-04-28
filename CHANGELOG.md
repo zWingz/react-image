@@ -1,3 +1,12 @@
+## [1.1.3](https://github.com/zWingz/react-image/compare/v1.1.2...v1.1.3) (2019-04-28)
+
+
+### Bug Fixes
+
+* 🐛 fix getBodyPaddingRight ([a1f0043](https://github.com/zWingz/react-image/commit/a1f0043))
+
+
+
 ## [1.1.2](https://github.com/zWingz/react-image/compare/v1.1.1...v1.1.2) (2019-03-29)
 
 
