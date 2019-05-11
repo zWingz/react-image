@@ -43,5 +43,5 @@ declare module '@zzwing/react-image' {
     show: () => void
     hide: () => void
   }
-  function createObserver(container?: HTMLElement): IntersectionObserver
+  export function createObserver(container?: HTMLElement): IntersectionObserver
 }
