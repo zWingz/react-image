@@ -23,7 +23,8 @@
     "tslint": "tslint --fix --format codeFrame --project .",
     "dev": "poi --serve",
     "pub": "yarn tslint && yarn build && yarn publish --access=public",
-    "test": "jest"
+    "test": "jest",
+    "changelog": "npx conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
   },
   "author": "zhengzwing@gmail.com",
   "license": "MIT",
