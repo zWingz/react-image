@@ -18,10 +18,11 @@ declare module '@zzwing/react-image' {
     onDelete?: (src: string) => void
     className?: string
     observer?: IntersectionObserver
+    showPreviewList?: boolean
   }
   export class Image extends PureComponent<iImageProp> {}
   export interface PreviewInterface {
-    (current: number | string, list?: Array<string>): void
+    (current: number | string, list?: string[], showList?: boolean): void
   }
   export interface PreviewInstance {
     preview: PreviewInterface

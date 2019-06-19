@@ -18,12 +18,13 @@ describe('test preview initial state', () => {
     expect(ins.state.open).toEqual(false)
     expect(ins.state.loaded).toEqual(false)
     expect(ins.state.error).toEqual(false)
-    expect(ins.state.x).toEqual(0)
-    expect(ins.state.y).toEqual(0)
-    expect(ins.state.left).toEqual(0)
-    expect(ins.state.top).toEqual(0)
-    expect(ins.state.scale).toEqual(1)
-    expect(ins.state.rotate).toEqual(0)
+    const { imgState } = ins
+    expect(imgState.originX).toEqual(0)
+    expect(imgState.originY).toEqual(0)
+    expect(imgState.left).toEqual(0)
+    expect(imgState.top).toEqual(0)
+    expect(imgState.scale).toEqual(0)
+    expect(imgState.rotate).toEqual(0)
     expect(ins.state.changed).toEqual(false)
   })
 })
@@ -60,18 +61,20 @@ describe('test preview image with onload', () => {
   wrapper.update()
   ins.forceUpdate()
   it('trigger onload', () => {
+    // innerWidth = 768
+    // innerHeight = 576
     wrapper
       .find(imgCurrent)
-      .simulate('load', { target: { naturalWidth: 1024 } })
+      .simulate('load', { target: { naturalWidth: 1024, naturalHeight: 1024 } })
     expect(spy).toBeCalledTimes(1)
   })
   it('load and error status', () => {
     expect(ins.state.loaded).toBeTruthy()
     expect(ins.state.error).toBeFalsy()
   })
-  it('scale is 0.75', done => {
+  it('init scale is 0.75', done => {
     setTimeout(() => {
-      expect(ins.state.scale).toBe(0.75)
+      expect(ins.imgState.scale).toBe(768 / 1024 * 576 / 1024)
       done()
     }, 30)
   })
@@ -143,12 +146,12 @@ describe('test img transform', () => {
     let expectScale = 0.75
     it('test scale down', () => {
       // setTimeout(() => {
-      expect(ins.state.scale).toEqual(expectScale)
+      expect(ins.imgState.scale).toEqual(expectScale)
       container.simulate('wheel', {
         deltaY: -10
       })
-      expectScale *= 0.9
-      expect(ins.state.scale).toEqual(expectScale)
+      expectScale = +(expectScale * 0.9).toFixed(2)
+      expect(ins.imgState.scale).toEqual(expectScale)
       // done()
       // }, 50)
     })
@@ -157,8 +160,8 @@ describe('test img transform', () => {
       container.simulate('wheel', {
         deltaY: 10
       })
-      expectScale *= 1.1
-      expect(ins.state.scale).toEqual(expectScale)
+      expectScale = +(expectScale * 1.1).toFixed(2)
+      expect(ins.imgState.scale).toEqual(expectScale)
       // done()
       // }, 50)
     })
@@ -167,8 +170,8 @@ describe('test img transform', () => {
     const startX = 100
     const startY = 100
     const stopPropagation = jest.fn()
-    expect(ins.state.left).toEqual(0)
-    expect(ins.state.top).toEqual(0)
+    expect(ins.imgState.left).toEqual(0)
+    expect(ins.imgState.top).toEqual(0)
     const img = wrapper.find(imgCurrent)
     it('test mouseDown', () => {
       img.simulate('mousedown', { button: 1, stopPropagation })
@@ -181,48 +184,52 @@ describe('test img transform', () => {
       })
       wrapper.update()
       ins.forceUpdate()
-      expect(ins.state.x).toEqual(100)
-      expect(ins.state.y).toEqual(100)
-      expect((container.getDOMNode() as HTMLDivElement).style.cursor).toEqual('move')
+      expect(ins.imgState.originX).toEqual(100)
+      expect(ins.imgState.originY).toEqual(100)
+      expect((container.getDOMNode() as HTMLDivElement).style.cursor).toEqual(
+        'move'
+      )
     })
     it('test mouseMove', () => {
       const endX = 500
       const endY = -500
-      const startLeft = ins.state.left
-      const startTop = ins.state.top
+      const startLeft = ins.imgState.left
+      const startTop = ins.imgState.top
       const event = new MouseEvent('mousemove', {
         clientX: endX,
         clientY: endY
       })
       container.getDOMNode().dispatchEvent(event)
-      expect(ins.state.x).toEqual(endX)
-      expect(ins.state.y).toEqual(endY)
-      expect(ins.state.left).toEqual(startLeft + endX - startX)
-      expect(ins.state.top).toEqual(startTop + endY - startY)
+      expect(ins.imgState.originX).toEqual(endX)
+      expect(ins.imgState.originY).toEqual(endY)
+      expect(ins.imgState.left).toEqual(startLeft + endX - startX)
+      expect(ins.imgState.top).toEqual(startTop + endY - startY)
     })
     it('test mouseUp', () => {
       container.simulate('mouseup')
-      expect((container.getDOMNode() as HTMLDivElement).style.cursor).toEqual('initial')
+      expect((container.getDOMNode() as HTMLDivElement).style.cursor).toEqual(
+        'initial'
+      )
     })
     it('it should remove mouseMove listener after mouseUp', () => {
       const mouseMoveEvent = new MouseEvent('mousemove', {
         clientX: 100,
         clientY: 100
       })
-      const initX = ins.state.x
-      const initY = ins.state.y
+      const initX = ins.imgState.originX
+      const initY = ins.imgState.originY
       container.getDOMNode().dispatchEvent(mouseMoveEvent)
-      expect(ins.state.x).toEqual(initX)
-      expect(ins.state.y).toEqual(initY)
+      expect(ins.imgState.originX).toEqual(initX)
+      expect(ins.imgState.originY).toEqual(initY)
     })
   })
   describe('test rotate', () => {
     const rotate = wrapper.find('.img-viewer-rotate')
     expect(rotate).toHaveLength(2)
     rotate.at(0).simulate('click')
-    expect(ins.state.rotate).toEqual(90)
+    expect(ins.imgState.rotate).toEqual(90)
     rotate.at(1).simulate('click')
-    expect(ins.state.rotate).toEqual(0)
+    expect(ins.imgState.rotate).toEqual(0)
   })
 })
 
@@ -272,36 +279,44 @@ describe('test change index', () => {
     expect(ins.state.current).toEqual(result)
     expect(wrapper.find(imgCurrent).prop('src')).toEqual(src[result])
   })
+  it('test hide preview list', () => {
+    wrapper.setState({
+      showList: false
+    })
+    expect(wrapper.find('.img-viewer-item')).toHaveLength(0)
+  })
 })
 
 describe('test show/hide', () => {
   const wrapper = mount<ImgPreview>(getComp())
   const ins = wrapper.instance()
   it('test show', () => {
-    wrapper.setState({
+    ins.updateImageState({
       top: 100,
       left: 100,
       scale: 100,
-      rotate: 100,
+      rotate: 100
+    })
+    wrapper.setState({
       changed: true,
       loaded: true
     })
-    expect(wrapper.state()).toMatchObject({
+    expect(ins.imgState).toMatchObject({
       top: 100,
       left: 100,
       scale: 100,
-      rotate: 100,
-      changed: true,
-      loaded: true
+      rotate: 100
     })
     ins.show()
     expect(wrapper.state()).toMatchObject({
+      loaded: false,
+      open: true
+    })
+    expect(ins.imgState).toMatchObject({
       top: 0,
       left: 0,
       scale: 0,
-      rotate: 0,
-      loaded: false,
-      open: true
+      rotate: 0
     })
     expect(document.body.style.overflow).toEqual('hidden')
   })
@@ -343,9 +358,9 @@ describe('test getInstance', () => {
   it('test instance preview', () => {
     const ins = instance.component
     ins.exportPreview = jest.fn()
-    instance.preview('1', ['1', '2'])
+    instance.preview('1', ['1', '2'], false)
     expect(ins.exportPreview).toBeCalledTimes(1)
-    expect(ins.exportPreview).toBeCalledWith('1', ['1', '2'])
+    expect(ins.exportPreview).toBeCalledWith('1', ['1', '2'], false)
   })
   it('test instance show', () => {
     const ins = instance.component
@@ -377,22 +392,16 @@ describe('test api', () => {
     const destroy = jest.fn()
     ImgPreview.newInstance = function(callback) {
       callback({
-        preview(current, list) {
-          preview(current, list)
-        },
-        show() {
-          show()
-        },
+        preview,
+        show,
         component: {} as ImgPreview,
-        hide() {
-          hide()
-        },
+        hide,
         destroy
       })
     }
-    PreviewApi.preview('1', ['1', '2'])
+    PreviewApi.preview('1', ['1', '2'], false)
     expect(preview).toBeCalledTimes(1)
-    expect(preview).toBeCalledWith('1', ['1', '2'])
+    expect(preview).toBeCalledWith('1', ['1', '2'], false)
     PreviewApi.show()
     expect(show).toBeCalledTimes(1)
     PreviewApi.hide()
