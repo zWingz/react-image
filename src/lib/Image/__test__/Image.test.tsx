@@ -115,7 +115,7 @@ describe('test img when IntersectionObserver is false', () => {
 describe('test preview', () => {
   let preview, previewSrc, previewList
   beforeEach(() => {
-    preview = jest.fn((src, list) => {
+    preview = jest.fn((src, list, showList) => {
       previewSrc = src
       previewList = list
     })
@@ -130,10 +130,21 @@ describe('test preview', () => {
       .simulate('click')
     const dom: NodeListOf<HTMLImageElement> = document.querySelectorAll('.mask-img')
     expect(preview).toBeCalledTimes(1)
-    expect(previewSrc).toBe(wrapper.instance().props.src)
-    expect(previewList).toEqual(
-      Array.from(dom).map(each => each.dataset.imgSrc)
-    )
+    expect(preview).toBeCalledWith(wrapper.instance().props.src, Array.from(dom).map(each => each.dataset.imgSrc), true)
+  })
+  it('hide preview-list', () => {
+    const wrapper = shallow<ImageComponent>(getComp())
+    wrapper.setProps({
+      showPreviewList: false
+    })
+    wrapper
+      .find('img')
+      .simulate('load')
+      .simulate('click')
+    const dom: NodeListOf<HTMLImageElement> = document.querySelectorAll('.mask-img')
+    expect(preview).toBeCalledTimes(1)
+    // expect(preview).toBeCalledWith()
+    expect(preview).toBeCalledWith(wrapper.instance().props.src, Array.from(dom).map(each => each.dataset.imgSrc), false)
   })
   it('preview a group img', () => {
     const group = 'test'

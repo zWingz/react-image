@@ -1,5 +1,11 @@
 import * as React from 'react'
-import { RefObject, createRef, ImgHTMLAttributes, CSSProperties, PureComponent } from 'react'
+import {
+  RefObject,
+  createRef,
+  ImgHTMLAttributes,
+  CSSProperties,
+  PureComponent
+} from 'react'
 import './style.scss'
 import LoadingIcon from '../LoadingIcon'
 import { CanUseIntersecion, observe, unobserve } from './observer'
@@ -8,25 +14,33 @@ import ErrorIcon from '../ErrorIcon'
 import { ObjectFitProperty } from 'csstype'
 
 export type iImageProp = {
-  src: string;
-  height?: string | number;
-  width?: string | number;
-  style?: CSSProperties;
-  group?: string | number;
-  objectFit?: ObjectFitProperty;
-  preview?: boolean;
-  imgProps?: ImgHTMLAttributes<any>;
-  mask?: boolean;
-  onClick?: (src: string) => void;
-  onError?: (src: string) => void;
-  onLoad?: (src: string) => void;
-  onDelete?: (src: string) => void;
-  className?: string;
-  observer?: IntersectionObserver;
+  src: string
+  height?: string | number
+  width?: string | number
+  style?: CSSProperties
+  group?: string | number
+  objectFit?: ObjectFitProperty
+  preview?: boolean
+  imgProps?: ImgHTMLAttributes<any>
+  mask?: boolean
+  onClick?: (src: string) => void
+  onError?: (src: string) => void
+  onLoad?: (src: string) => void
+  onDelete?: (src: string) => void
+  className?: string
+  observer?: IntersectionObserver
+  showPreviewList?: boolean
 }
 
 export default class ReactImage extends PureComponent<iImageProp> {
-
+  static defaultProps = {
+    width: 100,
+    group: 'default',
+    objectFit: 'cover',
+    preview: true,
+    mask: true,
+    showPreviewList: true
+  }
   get style(): CSSProperties {
     const { height, width } = this.props
     return {
@@ -51,13 +65,6 @@ export default class ReactImage extends PureComponent<iImageProp> {
     return ret
   }
 
-  static defaultProps = {
-    width: 100,
-    group: 'default',
-    objectFit: 'cover',
-    preview: true,
-    mask: true
-  }
   refDom: RefObject<HTMLDivElement> = null
 
   state = {
@@ -93,13 +100,13 @@ export default class ReactImage extends PureComponent<iImageProp> {
   }
   onClickHandler = () => {
     const { isLoading, isError } = this.state
-    const { src, group, preview, onClick } = this.props
+    const { src, group, preview, onClick, showPreviewList } = this.props
     if (preview && src && !isLoading && !isError) {
       const dom: NodeListOf<HTMLImageElement> = document.querySelectorAll(
         `.mask-img[data-img-group="${group}"]`
       )
       const list = Array.from(dom).map(each => each.dataset.imgSrc)
-      PreviewApi.preview(src, list)
+      PreviewApi.preview(src, list, showPreviewList)
     }
     onClick && onClick(src)
   }
@@ -136,22 +143,19 @@ export default class ReactImage extends PureComponent<iImageProp> {
       mask
     } = this.props
     const { isLoading, loadObserve, isError } = this.state
-
     return (
       <span
         className={['mask-img', mask ? 'mask' : '', className].join(' ')}
         data-img-group={preview ? group : null}
         data-img-src={preview ? src : null}
         style={this.style}
-        ref={this.refDom}
-      >
+        ref={this.refDom}>
         {onDelete ? (
           <span className='delete-img'>
             <i
               className='react-image-icon'
               style={{ display: 'inline-block' }}
-              onClick={this.onDelete}
-            >
+              onClick={this.onDelete}>
               &#xe904;
             </i>
           </span>
@@ -169,8 +173,7 @@ export default class ReactImage extends PureComponent<iImageProp> {
         {isLoading && (
           <div
             className='mask-loading'
-            style={{ minHeight: `${height || 100}px` }}
-          >
+            style={{ minHeight: `${height || 100}px` }}>
             <LoadingIcon size='sm' />
           </div>
         )}
