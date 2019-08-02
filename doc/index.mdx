@@ -92,7 +92,7 @@ const Images = (function() {
 
 ### Preview
 
-Preview image without use component `Image`
+#### Preview image without use component `Image`
 
 <Playground>
   {() => {
@@ -104,6 +104,24 @@ Preview image without use component `Image`
           key={each}
           style={{ width: '200px', height: '200px', objectFit: 'cover' }}
           onClick={() => PreviewApi.preview(each, img)}
+        />
+      )
+    })
+  }}
+</Playground>
+
+#### hide preview-list
+
+<Playground>
+  {() => {
+    const img = Images.slice(0, 3)
+    return img.map(each => {
+      return (
+        <img
+          src={each}
+          key={each}
+          style={{ width: '200px', height: '200px', objectFit: 'cover' }}
+          onClick={() => PreviewApi.preview(each, img, false)}
         />
       )
     })

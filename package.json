@@ -1,6 +1,6 @@
 {
   "name": "@zzwing/react-image",
-  "version": "1.1.7",
+  "version": "1.2.0",
   "description": "react image component",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -23,7 +23,8 @@
     "tslint": "tslint --fix --format codeFrame --project .",
     "dev": "poi --serve",
     "pub": "yarn tslint && yarn build && yarn publish --access=public",
-    "test": "jest"
+    "test": "jest",
+    "changelog": "npx conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
   },
   "author": "zhengzwing@gmail.com",
   "license": "MIT",
