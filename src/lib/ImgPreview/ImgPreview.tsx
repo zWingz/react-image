@@ -113,13 +113,17 @@ export default class ImgPreview extends PureComponent<{}, PreviewState> {
    */
   windowKeyUpHandle = (e: KeyboardEvent) => {
     // e.stopPropagation()
-    // e.preventDefault()
+    e.preventDefault()
+    const { images } = this.state
+    const preventPrevNext = images && images.length <= 1
     const { keyCode } = e
     if (keyCode === 27) {
       this.hide()
     } else if (keyCode === 37) {
+      if (preventPrevNext) return
       this.prev()
     } else if (keyCode === 39) {
+      if (preventPrevNext) return
       this.next()
     }
   }
@@ -376,6 +380,8 @@ export default class ImgPreview extends PureComponent<{}, PreviewState> {
   }
 
   _renderIcon() {
+    const { images } = this.state
+    const hidePrevNext = images.length <= 1
     return (
       <>
         <div
@@ -387,12 +393,16 @@ export default class ImgPreview extends PureComponent<{}, PreviewState> {
             &#xe904;
           </i>
         </div>
-        <i className='img-viewer-prev react-image-icon' onClick={this.prev}>
-          &#xe914;
-        </i>
-        <i className='img-viewer-next react-image-icon' onClick={this.next}>
-          &#xe914;
-        </i>
+        {hidePrevNext ? null : (
+          <>
+            <i className='img-viewer-prev react-image-icon' onClick={this.prev}>
+              &#xe914;
+            </i>
+            <i className='img-viewer-next react-image-icon' onClick={this.next}>
+              &#xe914;
+            </i>
+          </>
+        )}
       </>
     )
   }
@@ -431,6 +441,7 @@ export default class ImgPreview extends PureComponent<{}, PreviewState> {
   _renderFooter() {
     const { state, prev, next, rotateFnc } = this
     const { images, current } = state
+    const hidePrevNext = images.length <= 1
     return (
       <>
         <div
@@ -439,12 +450,14 @@ export default class ImgPreview extends PureComponent<{}, PreviewState> {
             this.$footer = ref
           }}>
           <div className='img-viewer-ctrl'>
-            <i
-              className='react-image-icon'
-              onClick={prev}
-              style={{ transform: 'rotateY(180deg)' }}>
-              &#xe914;
-            </i>
+            {hidePrevNext ? null : (
+              <i
+                className='react-image-icon'
+                onClick={prev}
+                style={{ transform: 'rotateY(180deg)' }}>
+                &#xe914;
+              </i>
+            )}
             <i
               className='react-image-icon img-viewer-rotate'
               onClick={rotateFnc.bind(this, 90)}>
@@ -456,9 +469,11 @@ export default class ImgPreview extends PureComponent<{}, PreviewState> {
               style={{ transform: 'rotateY(180deg)' }}>
               &#xe91a;
             </i>
-            <i className='react-image-icon' onClick={next}>
-              &#xe914;
-            </i>
+            {hidePrevNext ? null : (
+              <i className='react-image-icon' onClick={next}>
+                &#xe914;
+              </i>
+            )}
           </div>
           <div className='img-viewer-list'>
             {this.state.showList && (
